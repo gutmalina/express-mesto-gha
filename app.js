@@ -8,10 +8,6 @@ const { json } = require('body-parser');
 // app.use(bodyParser, json())
 app.use(express.json())
 
-/** роутеры пользователей и карточек */
-app.use('/', require('./routes/users'));
-app.use('/', require('./routes/cards'));
-
 /** временный мидлвэр - ID автора карточки*/
 app.use((req, res, next) => {
   req.user = {
@@ -20,6 +16,10 @@ app.use((req, res, next) => {
 
   next();
 });
+
+/** роутеры пользователей и карточек */
+app.use('/', require('./routes/users'));
+app.use('/', require('./routes/cards'));
 
 // //test
 // app.use((req, res, next)=>{
