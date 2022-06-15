@@ -27,9 +27,9 @@ app.use((req, res, next) => {
 //   next();
 // })
 
-app.get('/', (req, res)=>{
-  res.send('TEST express get')
-})
+// app.get('/', (req, res)=>{
+//   res.send('TEST express get')
+// })
 
 // app.post('/', (req, res)=>{
 //   res.send(req.body)
@@ -38,7 +38,7 @@ app.get('/', (req, res)=>{
 
 /** подключение к mongo и серверу */
 async function main(){
-  await mongoose.connect('mongodb://localhost:27017/mestodb1', {
+  await mongoose.connect('mongodb://localhost:27017/mestodb', {
     //useNewUrlParser: true,
     //useCreateIndex: true,
     //useFindAndModify: false
