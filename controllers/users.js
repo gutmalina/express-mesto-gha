@@ -11,23 +11,24 @@ module.exports.getUsers=(req, res) => {
 module.exports.getUserById= async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
-    //const user = await User.findById('62a8bab412020f86156e05ae');
-    if (!user) {
-      res.status(404).send('Пользователь с id не найден');
+      if (!user) {
+      res.status(404).send('Пользователь по указанному id не найден');
     }
     res.status(200).send({ data: user });
   } catch (error) {
     res.status(500).send({ message: 'Ошибка сервера' })
   }
-
 };
 
 /** создать пользователя */
-module.exports.createUser = (req, res) => {
+module.exports.createUser = async (req, res) => {
   const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
-    .then(user => res.send({ data: user }))
-    .catch(err => res.status(500).send({ message: 'Ошибка сервера' }));
+  try{
+    const user = await User.create({ name, about, avatar })
+    res.status(200).send({ data: user });
+  } catch (error){
+    res.status(500).send({ message: 'Ошибка сервера' })
+  }
 };
 
 /** обновить данные пользователя */
