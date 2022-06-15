@@ -8,42 +8,39 @@ module.exports.getUsers=(req, res) => {
 };
 
 /**получить пользователя по ID */
-module.exports.getUserById= async (req, res) => {
-  try {
-    const user = await User.findById(req.params.userId);
-      if (!user) {
-      res.status(404).send('Пользователь по указанному id не найден');
-    }
-    res.status(200).send({ data: user });
-  } catch (error) {
-    res.status(500).send({ message: 'Ошибка сервера' })
-  }
+module.exports.getUserById= (req, res) => {
+  User.findById(req.params.userId)
+    .then((user)=>{
+      if(!user) {
+        res.status(404).send('Пользователь по указанному id не найден')
+      }
+      res.status(200).send({ data: user });
+      }
+    )
+    .catch(err => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 /** создать пользователя */
-module.exports.createUser = async (req, res) => {
+module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
-  try{
-    const user = await User.create({ name, about, avatar })
-    res.status(200).send({ data: user });
-  } catch (error){
-    res.status(500).send({ message: 'Ошибка сервера' })
-  }
+  User.create({ name, about, avatar })
+    .then((user)=>{res.status(200).send({ data: user });})
+    .catch(err => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 /** обновить данные пользователя */
-module.exports.updateUser = async (req, res)=>{
+module.exports.updateUser = (req, res)=>{
   const { name, about } = req.body;
   const userId = req.user._id;
-  try{
-    const user = await User.findByIdAndUpdate(userId, { name, about }, {new: true, runValidators: true})
-    if (!user) {
-      res.status(404).send('Пользователь по указанному id не найден');
-    }
-    res.status(200).send({ data: user });
-  }catch(error){
-    res.status(500).send({ message: 'Ошибка сервера' })
-  }
+  User.findByIdAndUpdate(userId, { name, about }, {new: true, runValidators: true})
+    .then((user)=>{
+      if(!user) {
+        res.status(404).send('Пользователь по указанному id не найден')
+      }
+      res.status(200).send({ data: user });
+      }
+    )
+    .catch(err => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 /** обновить аватар пользователя */
