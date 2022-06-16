@@ -4,7 +4,7 @@ const Card = require('../models/card');
 module.exports.getCards=(req, res) => {
   Card.find({})
     .then(card => res.status(200).send({ data: card }))
-    .catch(err => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch(err => res.status(400).send({ message: 'Ошибка сервера' }));
 };
 
 /** создать карточку */
@@ -13,7 +13,7 @@ module.exports.createCard = (req, res) => {
   const owner = req.user._id;
   Card.create({ name, link, owner })
     .then(card => res.status(200).send({ data: card }))
-    .catch(err => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch(err => res.status(400).send({ message: 'Ошибка сервера' }));
 };
 
 /** удалить карточку по ID */
@@ -31,7 +31,7 @@ module.exports.deleteCard = (req, res)=>{
       }
       res.status(200).send({ data: card, message: "Карточка удалена" });
     })
-    .catch(err => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch(err => res.status(400).send({ message: 'Ошибка сервера' }));
 };
 
 /** поставить лайк карточке */
@@ -44,7 +44,7 @@ module.exports.likeCard = (req, res)=>{
       }
       res.status(200).send({ data: card })
     })
-    .catch(err => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch(err => res.status(400).send({ message: 'Ошибка сервера' }));
 };
 
 /** удалить лайк у карточки */
@@ -57,5 +57,5 @@ module.exports.dislikeCard = (req, res)=>{
       }
       res.status(200).send({ data: card })
     })
-    .catch(err => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch(err => res.status(400).send({ message: 'Ошибка сервера' }));
 };
