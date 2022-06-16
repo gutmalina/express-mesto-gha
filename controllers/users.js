@@ -1,3 +1,4 @@
+const user = require('../models/user');
 const User = require('../models/user');
 
 /**получить всех пользователей */
@@ -19,7 +20,7 @@ module.exports.getUserById= async (req, res) => {
     res.status(200).send({ data: user });
   }catch(err){
     if(err.name === "CastError"){
-      res.status(400).send('Введен некорректный id пользователя');
+      res.status(400).send({data: user, message: 'Введен некорректный id пользователя'});
       return
     }else{
       res.status(500).send('Ошибка сервера')
