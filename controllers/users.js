@@ -3,7 +3,7 @@ const User = require('../models/user');
 /**получить всех пользователей */
 module.exports.getUsers=(req, res) => {
   User.find({})
-    .then(user => res.send({ data: user }))
+    .then(user => res.status(200).send({ data: user }))
     .catch(err => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
@@ -13,6 +13,7 @@ module.exports.getUserById= (req, res) => {
     .then((user)=>{
       if(!user) {
         res.status(404).send('Пользователь по указанному id не найден')
+        return
       }
       res.status(200).send({ data: user });
       }
@@ -36,6 +37,7 @@ module.exports.updateUser = (req, res)=>{
     .then((user)=>{
       if(!user) {
         res.status(404).send('Пользователь по указанному id не найден')
+        return
       }
       res.status(200).send({ data: user });
       }
@@ -51,6 +53,7 @@ module.exports.updateAvatar = (req, res)=>{
     .then((user) => {
       if(!user) {
         res.status(404).send('Пользователь по указанному id не найден')
+        return
       }
       res.status(200).send({ data: user });
       }
