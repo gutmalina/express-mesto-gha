@@ -15,6 +15,10 @@ module.exports.createCard = async (req, res) => {
     const card = await Card.create({ name, link, owner })
     res.status(200).send({ data: card })
   }catch{
+    if(err.name === "Not Found"){
+      res.status(404).send({message: 'Карточка с указанным id не найдена'})
+      return
+    }
     if(err.name === "ValidationError" || err.name === "CastError"){
       res.status(400).send({message: 'Введены некорректные данные'});
       return
@@ -28,7 +32,9 @@ module.exports.deleteCard = async (req, res)=>{
   const userId = req.user._id;
   try{
     const card = await Card.findByIdAndRemove(req.params.CardId)
-    if(!card) {
+    res.status(200).send({ data: card, message: "Карточка удалена" });
+  }catch(err){
+    if(err.name === "Not Found"){
       res.status(404).send({message: 'Карточка с указанным id не найдена'})
       return
     }
@@ -36,8 +42,6 @@ module.exports.deleteCard = async (req, res)=>{
       res.status(403).send({message: 'Карточка не может быть удалена'})
       return
     }
-    res.status(200).send({ data: card, message: "Карточка удалена" });
-  }catch(err){
     res.status(500).send({message: 'Ошибка сервера'})
   }
 };
