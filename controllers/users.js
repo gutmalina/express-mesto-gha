@@ -37,15 +37,16 @@ module.exports.createUser = (req, res) => {
 
 /** обновить данные пользователя */
 module.exports.updateUser = async (req, res)=>{
-  const { name, about } = req.body;
-  const userId = req.user._id;
+  //const { name, about } = req.body;
+  //const userId = req.user._id;
+  const userId = "62a8bc1c12020f86156e05b0";
   try{
-    const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
+    const user = await User.findByIdAndUpdate(userId, { name: "Тест", about: "Тест" }, { new: true, runValidators: true })
     if(!user) {
       res.status(404).send({message: 'Пользователь по указанному id не найден'});
       return
     }
-    res.status(200).send({ user: { name: user.name, about: user.about} });
+    res.status(200).send({ name: user.name, about: user.about });
   }catch(err){
     if(err.name === "ValidationError" || err.name === "CastError"){
       res.status(400).send({message: 'Введены некорректные данные пользователя'});
