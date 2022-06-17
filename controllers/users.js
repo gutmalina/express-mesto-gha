@@ -58,8 +58,8 @@ module.exports.updateUser = (req, res)=>{
 module.exports.updateAvatar = (req, res)=>{
   const { avatar } = req.body;
   const userId = req.user._id;
-   User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
-     .then(user => res.status(200).send({ data: user}))
+  User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
+    .then(user => res.status(200).send({ data: {avatar} }))
     .catch((err) => {
       if(err.name === "Not Found") {
         res.status(404).send({ message: 'Пользователь по указанному id не найден' });
