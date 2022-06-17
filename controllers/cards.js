@@ -31,7 +31,6 @@ module.exports.createCard = async (req, res) => {
 module.exports.deleteCard = async (req, res)=>{
   const cardId = req.params.cardId;
   const userId = req.user._id;
-  const ownerId = card.owner._id
   try{
     const card = await Card.findByIdAndRemove(cardId)
     res.status(200).send({ data: card, message: "Карточка удалена" });
@@ -44,7 +43,7 @@ module.exports.deleteCard = async (req, res)=>{
       res.status(400).send({message: 'Введены некорректные данные'});
       return
     }
-    if(String(userId) !== String(ownerId)){
+    if(String(userId) !== String(card.owner._id)){
       res.status(403).send({message: 'Карточка не может быть удалена'})
       return
     }
