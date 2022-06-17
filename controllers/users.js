@@ -56,14 +56,17 @@ module.exports.updateUser = async (req, res)=>{
 
   try{
     const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
-    res.status(200).send({ name: user.name, about: user.about });  
+    res.status(200).send({ data: user });
   }catch(err){
+    if(err.name === "Not Found") {
+      res.status(404).send({ message: 'Пользователь по указанному id не найден' });
+      return
+    }
     if(err.name === "ValidationError" || err.name === "CastError"){
       res.status(400).send({message: 'Введены некорректные данные пользователя'});
       return
-    }else{
-      res.status(500).send({message: 'Ошибка сервера'})
     }
+    res.status(500).send({message: 'Ошибка сервера'})
   }
 
 
