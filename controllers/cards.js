@@ -29,16 +29,22 @@ module.exports.createCard = async (req, res) => {
 
 /** удалить карточку по ID */
 module.exports.deleteCard = async (req, res)=>{
+  const cardId = req.params.cardId;
   const userId = req.user._id;
+  const ownerId = card.owner._id
   try{
-    const card = await Card.findByIdAndRemove(req.params.CardId)
+    const card = await Card.findByIdAndRemove(cardId)
     res.status(200).send({ data: card, message: "Карточка удалена" });
   }catch(err){
     if(err.name === "Not Found"){
       res.status(404).send({message: 'Карточка с указанным id не найдена'})
       return
     }
-    if(String(userId) !== String(card.owner._id)){
+    if(err.name === "ValidationError" || err.name === "CastError"){
+      res.status(400).send({message: 'Введены некорректные данные'});
+      return
+    }
+    if(String(userId) !== String(ownerId)){
       res.status(403).send({message: 'Карточка не может быть удалена'})
       return
     }
@@ -68,8 +74,10 @@ module.exports.likeCard = async (req, res)=>{
 
 /** удалить лайк у карточки */
 module.exports.dislikeCard = async (req, res)=>{
+  const cardId = req.params.cardId;
+  const userId = req.user._id;
   try{
-    const card = await Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+    const card = await Card.findByIdAndUpdate(cardId, { $pull: { likes: userId } }, { new: true })
     res.status(200).send({ data: card })
   }catch(err){
     if(err.name === "Not Found"){
