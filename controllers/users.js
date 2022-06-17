@@ -45,7 +45,7 @@ module.exports.updateUser = async (req, res)=>{
       res.status(404).send({message: 'Пользователь по указанному id не найден'});
       return
     }
-    res.status(200).send({ name: user.name, about: user.about });
+    res.status(200).send({ data: { name, about }});
   }catch(err){
     if(err.name === "ValidationError" || err.name === "CastError"){
       res.status(400).send({message: 'Введены некорректные данные пользователя'});
