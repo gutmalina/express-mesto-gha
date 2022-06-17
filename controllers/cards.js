@@ -5,7 +5,7 @@ const ServerError = require('../Error/ServerError')
 module.exports.getCards=(req, res) => {
   Card.find({})
     .then(card => res.status(200).send({ data: card }))
-    .catch((err) => {throw new ServerError('Ошибка сервера')});
+    .catch((err) => {throw new ServerError({ message: 'Ошибка сервера'})});
 };
 
 /** создать карточку */
@@ -14,7 +14,7 @@ module.exports.createCard = (req, res) => {
   const owner = req.user._id;
   Card.create({ name, link, owner })
     .then(card => res.status(200).send({ data: card }))
-    .catch((err) => {throw new ServerError('Ошибка сервера')});
+    .catch((err) => {throw new ServerError({ message: 'Ошибка сервера'})});
 };
 
 /** удалить карточку по ID */
