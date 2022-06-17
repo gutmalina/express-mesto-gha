@@ -66,7 +66,7 @@ module.exports.updateAvatar = async (req, res)=>{
       res.status(404).send({message: 'Пользователь по указанному id не найден'});
       return
     }
-    res.status(200).send({ data: user.avatar });
+    res.status(200).send({ data: user, message: "Данные обновлены" });
   }catch(err){
     if(err.name === "CastError"){
       res.status(400).send({message: 'Введен некорректный id пользователя'});
