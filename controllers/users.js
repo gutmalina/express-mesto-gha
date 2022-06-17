@@ -37,11 +37,10 @@ module.exports.createUser = (req, res) => {
 
 /** обновить данные пользователя */
 module.exports.updateUser = async (req, res)=>{
-  //const { name, about } = req.body;
-  //const userId = req.user._id;
-  const userId = "62a8bc1c12020f86156e05b0";
+  const { name, about } = req.body;
+  const userId = req.user._id;
   try{
-    const user = await User.findByIdAndUpdate(userId, { name: "Тест", about: "Тест" }, { new: true, runValidators: true })
+    const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
     if(!user) {
       res.status(404).send({message: 'Пользователь по указанному id не найден'});
       return
