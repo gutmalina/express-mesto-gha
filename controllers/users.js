@@ -1,22 +1,19 @@
 const User = require('../models/user');
-const { CastError } = require('../Error/CastError')
 
 /**получить всех пользователей */
 module.exports.getUsers=(req, res) => {
   User.find({})
     .then(user => res.status(200).send({ data: user }))
-    .catch(err => res.status(500).send('Ошибка сервера'));
+    .catch(err => res.status(500).send({message: 'Ошибка сервера'}));
 };
 
 /**получить пользователя по ID */
-module.exports.getUserById= async (req, res, next) => {
-  const userId = "test"
-  //const userId = "62a8bc1c12020f86156e05b0"
-  //const userId = req.params.userId;
+module.exports.getUserById= async (req, res) => {
+  const userId = req.params.userId;
   try{
     const user = await User.findById(userId)
     if(!user){
-      res.status(404).send('Пользователь по указанному id не найден');
+      res.status(404).send({message: 'Пользователь по указанному id не найден'});
       return
     }
     res.status(200).send({ data: user });
@@ -25,7 +22,7 @@ module.exports.getUserById= async (req, res, next) => {
       res.status(400).send({message: 'Введен некорректный id пользователя'});
       return
     }else{
-      res.status(500).send('Ошибка сервера')
+      res.status(500).send({message: 'Ошибка сервера'})
     }
   }
 };
@@ -45,16 +42,16 @@ module.exports.updateUser = async (req, res)=>{
   try{
     const user = await User.findByIdAndUpdate(userId, { name, about }, {new: true, runValidators: true})
     if(!user) {
-      res.status(404).send('Пользователь по указанному id не найден');
+      res.status(404).send({message: 'Пользователь по указанному id не найден'});
       return
     }
     res.status(200).send({ data: user });
   }catch(err){
     if(err.name === "ValidationError" || err.name === "CastError"){
-      res.status(400).send('Введены некорректные данные пользователя');
+      res.status(400).send({message: 'Введены некорректные данные пользователя'});
       return
     }else{
-      res.status(500).send('Ошибка сервера')
+      res.status(500).send({message: 'Ошибка сервера'})
     }
   }
 };
@@ -66,16 +63,16 @@ module.exports.updateAvatar = async (req, res)=>{
   try{
     const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
     if(!user) {
-      res.status(404).send('Пользователь по указанному id не найден');
+      res.status(404).send({message: 'Пользователь по указанному id не найден'});
       return
     }
     res.status(200).send({ data: user });
   }catch(err){
     if(err.name === "CastError"){
-      res.status(400).send('Введен некорректный id пользователя');
+      res.status(400).send({message: 'Введен некорректный id пользователя'});
       return
     }else{
-      res.status(500).send('Ошибка сервера')
+      res.status(500).send({message: 'Ошибка сервера'})
     }
   }
 };
