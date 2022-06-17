@@ -48,12 +48,18 @@ module.exports.deleteCard = async (req, res)=>{
 
 /** поставить лайк карточке */
 module.exports.likeCard = async (req, res)=>{
+  const cardId = req.params.cardId;
+  const userId = req.user._id;
   try{
-    const card = await Card.findByIdAndUpdate(  req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+    const card = await Card.findByIdAndUpdate(  cardId, { $addToSet: { likes: userId } }, { new: true })
+    if(!cardId){
+      res.status(404).send({message: 'Карточка с указанным id не найдена'})
+      return
+    }
     res.status(200).send({ data: card })
   }catch(err){
-    if(err.name === "Not Found"){
-      res.status(404).send({message: 'Карточка с указанным id не найдена'})
+    if(err.name === "ValidationError" || err.name === "CastError"){
+      res.status(400).send({message: 'Введены некорректные данные'});
       return
     }
     res.status(500).send({message: 'Ошибка сервера'})
@@ -68,6 +74,10 @@ module.exports.dislikeCard = async (req, res)=>{
   }catch(err){
     if(err.name === "Not Found"){
       res.status(404).send({message: 'Карточка с указанным id не найдена'})
+      return
+    }
+    if(err.name === "ValidationError" || err.name === "CastError"){
+      res.status(400).send({message: 'Введены некорректные данные'});
       return
     }
     res.status(500).send({message: 'Ошибка сервера'})
