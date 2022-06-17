@@ -40,14 +40,12 @@ module.exports.updateUser = (req, res)=>{
   const { name, about } = req.body;
   const userId = req.user._id;
   User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
-    .then((user)=>{
-      if(!user){
+    .then(user => res.status(200).send({ data: user }))
+    .catch((err)=>{
+      if(err.name === "Not Found") {
         res.status(404).send({ message: 'Пользователь по указанному id не найден' });
         return
       }
-      res.status(200).send({ data: user });
-    })
-    .catch((err)=>{
       if(err.name === "ValidationError" || err.name === "CastError"){
         res.status(400).send({message: 'Введены некорректные данные пользователя'});
         return
