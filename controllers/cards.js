@@ -13,12 +13,12 @@ module.exports.createCard = async (req, res) => {
   const owner = req.user._id;
   try{
     const card = await Card.create({ name, link, owner })
+    res.status(200).send({ data: card })
+  }catch{
     if(err.name === "ValidationError" || err.name === "CastError"){
       res.status(400).send({message: 'Введены некорректные данные'});
       return
     }
-    res.status(200).send({ data: card })
-  }catch{
     res.status(500).send({message: 'Ошибка сервера'})
   }
 };
@@ -46,12 +46,12 @@ module.exports.deleteCard = async (req, res)=>{
 module.exports.likeCard = async (req, res)=>{
   try{
     const card = await Card.findByIdAndUpdate(  req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
-    if(!card){
+    res.status(200).send({ data: card })
+  }catch(err){
+    if(err.name === "Not Found"){
       res.status(404).send({message: 'Карточка с указанным id не найдена'})
       return
     }
-    res.status(200).send({ data: card })
-  }catch(err){
     res.status(500).send({message: 'Ошибка сервера'})
   }
 };
@@ -60,12 +60,12 @@ module.exports.likeCard = async (req, res)=>{
 module.exports.dislikeCard = async (req, res)=>{
   try{
     const card = await Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
-    if(!card){
+    res.status(200).send({ data: card })
+  }catch(err){
+    if(err.name === "Not Found"){
       res.status(404).send({message: 'Карточка с указанным id не найдена'})
       return
     }
-    res.status(200).send({ data: card })
-  }catch(err){
     res.status(500).send({message: 'Ошибка сервера'})
   }
 };

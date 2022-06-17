@@ -12,33 +12,19 @@ module.exports.getUserById= async (req, res) => {
   const userId = req.params.userId;
   try{
     const user = await User.findById(userId)
-    // if(!user){
-    //   res.status(404).send({message: 'Пользователь по указанному id не найден'});
-    //   return
-    // }
+    if(!user){
+      res.status(404).send({message: 'Пользователь по указанному id не найден'});
+      return
+    }
     res.status(200).send({ data: user });
   }catch(err){
-    if(err.name === "Not Found") {
-      res.status(404).send({ message: 'Пользователь по указанному id не найден' });
-      return
-    }
-    if(err.name === "ValidationError" || err.name === "CastError"){
+    if(err.name === "CastError"){
       res.status(400).send({message: 'Введен некорректный id пользователя'});
       return
+    }else{
+      res.status(500).send({message: 'Ошибка сервера'})
     }
-    res.status(500).send({message: 'Ошибка сервера'})
   }
-
-
-
-
-  //   if(err.name === "CastError"){
-  //     res.status(400).send({message: 'Введен некорректный id пользователя'});
-  //     return
-  //   }else{
-  //     res.status(500).send({message: 'Ошибка сервера'})
-  //   }
-  // }
 };
 
 /** создать пользователя */
