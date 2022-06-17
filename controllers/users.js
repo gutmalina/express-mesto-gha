@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const CastError = require('../Error/CastError')
+const { CastError } = require('../Error/CastError')
 
 /**получить всех пользователей */
 module.exports.getUsers=(req, res) => {
@@ -9,8 +9,10 @@ module.exports.getUsers=(req, res) => {
 };
 
 /**получить пользователя по ID */
-module.exports.getUserById= async (req, res) => {
-  const userId = req.params.userId;
+module.exports.getUserById= async (req, res, next) => {
+  const userId = "test"
+  //const userId = "62a8bc1c12020f86156e05b0"
+  //const userId = req.params.userId;
   try{
     const user = await User.findById(userId)
     if(!user){
@@ -20,7 +22,8 @@ module.exports.getUserById= async (req, res) => {
     res.status(200).send({ data: user });
   }catch(err){
     if(err.name === "CastError"){
-      throw new CastError('Введен некорректный id пользователя');
+      res.status(400).send({message: 'Введен некорректный id пользователя'});
+      return
     }else{
       res.status(500).send('Ошибка сервера')
     }
