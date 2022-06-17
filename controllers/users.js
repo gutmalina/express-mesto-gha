@@ -40,8 +40,8 @@ module.exports.updateUser = (req, res)=>{
   const { name, about } = req.body;
   const userId = req.user._id;
   User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
-    .then(user => res.status(200).send({ name: user.name, about: user.about }))
-    .catch((err)=>{
+    .then(user => res.status(200).send({ data: {name, about} }))
+    .catch((err)=> {
       if(err.name === "Not Found") {
         res.status(404).send({ message: 'Пользователь по указанному id не найден' });
         return
@@ -55,21 +55,20 @@ module.exports.updateUser = (req, res)=>{
 };
 
 /** обновить аватар пользователя */
-module.exports.updateAvatar = async (req, res)=>{
+module.exports.updateAvatar = (req, res)=>{
   const { avatar } = req.body;
   const userId = req.user._id;
-  try{
-    const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
-    res.status(200).send({ data: user});
-  }catch(err){
-    if(err.name === "Not Found") {
-      res.status(404).send({ message: 'Пользователь по указанному id не найден' });
-      return
-    }
-    if(err.name === "ValidationError" || err.name === "CastError"){
-      res.status(400).send({message: 'Введены некорректные данные пользователя'});
-      return
-    }
-    res.status(500).send({message: 'Ошибка сервера'})
-  }
+   User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
+     .then(user => res.status(200).send({ data: user}))
+    .catch((err) => {
+      if(err.name === "Not Found") {
+        res.status(404).send({ message: 'Пользователь по указанному id не найден' });
+        return
+      }
+      if(err.name === "ValidationError" || err.name === "CastError"){
+        res.status(400).send({message: 'Введены некорректные данные пользователя'});
+        return
+      }
+      res.status(500).send({message: 'Ошибка сервера'})
+    })
 };
