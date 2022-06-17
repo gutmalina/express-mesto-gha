@@ -14,7 +14,7 @@ module.exports.createCard = async (req, res) => {
   try{
     const card = await Card.create({ name, link, owner })
     res.status(200).send({ data: card })
-  }catch{
+  }catch(err){
     if(err.name === "Not Found"){
       res.status(404).send({message: 'Карточка с указанным id не найдена'})
       return
