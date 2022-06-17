@@ -8,19 +8,26 @@ module.exports.getCards=(req, res) => {
 };
 
 /** создать карточку */
-module.exports.createCard = (req, res) => {
+module.exports.createCard = async (req, res) => {
   const { name, link } = req.body;
   const owner = req.user._id;
-  Card.create({ name, link, owner })
-    .then(card => res.status(200).send({ data: card }))
-    .catch((err) => res.status(500).send({message: 'Ошибка сервера'}));
+  try{
+    const card = await Card.create({ name, link, owner })
+    if(err.name === "ValidationError" || err.name === "CastError"){
+      res.status(400).send({message: 'Введены некорректные данные'});
+      return
+    }
+    res.status(200).send({ data: card })
+  }catch{
+    res.status(500).send({message: 'Ошибка сервера'})
+  }
 };
 
 /** удалить карточку по ID */
-module.exports.deleteCard = (req, res)=>{
+module.exports.deleteCard = async (req, res)=>{
   const userId = req.user._id;
   try{
-    const card = Card.findByIdAndRemove(req.params.CardId)
+    const card = await Card.findByIdAndRemove(req.params.CardId)
     if(!card) {
       res.status(404).send({message: 'Карточка с указанным id не найдена'})
       return
@@ -36,9 +43,9 @@ module.exports.deleteCard = (req, res)=>{
 };
 
 /** поставить лайк карточке */
-module.exports.likeCard = (req, res)=>{
+module.exports.likeCard = async (req, res)=>{
   try{
-    const card = Card.findByIdAndUpdate(  req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+    const card = await Card.findByIdAndUpdate(  req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     if(!card){
       res.status(404).send({message: 'Карточка с указанным id не найдена'})
       return
@@ -50,9 +57,9 @@ module.exports.likeCard = (req, res)=>{
 };
 
 /** удалить лайк у карточки */
-module.exports.dislikeCard = (req, res)=>{
+module.exports.dislikeCard = async (req, res)=>{
   try{
-    const card = Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+    const card = await Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     if(!card){
       res.status(404).send({message: 'Карточка с указанным id не найдена'})
       return
