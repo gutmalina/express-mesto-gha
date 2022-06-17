@@ -56,7 +56,7 @@ module.exports.updateUser = async (req, res)=>{
 
   try{
     const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
-    res.status(200).send({ data: user });
+    res.status(200).send({ name: user.name, about: user.about });  
   }catch(err){
     if(err.name === "ValidationError" || err.name === "CastError"){
       res.status(400).send({message: 'Введены некорректные данные пользователя'});
