@@ -1,11 +1,15 @@
 const User = require('../models/user');
 const { CAST_ERROR, NOT_FOUND_ERROR, SERVER_ERROR } = require('../utils/constants');
 
-/**получить всех пользователей */
-module.exports.getUsers=(req, res) => {
+/** получить всех пользователей */
+module.exports.getUsers = (req, res) => {
   User.find({})
-    .then(user => res.status(200).send({ data: user }))
-    .catch(err => res.status(SERVER_ERROR).send({message: 'На сервере произошла ошибка'}));
+    .then((user) => {
+      res.status(200).send({ data: user })
+    })
+    .catch((err) => {
+      res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' }),
+    });
 };
 
 /**получить пользователя по ID */
@@ -25,7 +29,7 @@ module.exports.getUserById= async (req, res) => {
     }else{
       res.status(SERVER_ERROR).send({message: 'На сервере произошла ошибка'})
     }
-  }
+  };
 };
 
 /** добавить пользователя */
@@ -58,7 +62,7 @@ module.exports.updateUser = (req, res)=>{
         return
       }
       res.status(SERVER_ERROR).send({message: 'На сервере произошла ошибка'})
-    })
+    });
 };
 
 /** обновить аватар пользователя */
@@ -77,5 +81,5 @@ module.exports.updateAvatar = (req, res)=>{
         return
       }
       res.status(SERVER_ERROR).send({message: 'На сервере произошла ошибка'})
-    })
+    });
 };
