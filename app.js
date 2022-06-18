@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const express = require('express');
+
 const { PORT = 3000 } = process.env;
 const app = express();
 const owner = require('./middlewares/owner');
@@ -14,17 +15,15 @@ app.use(owner);
 /** роутеры пользователей и карточек */
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
-app.use('*', (req, res, next) => {
-  res.status(NOT_FOUND_ERROR).send({ message: "Страница не найдена" }),
+
+app.use('*', (req, res) => {
+  res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
 });
 
 /** подключение к mongo и серверу */
-async function main(){
-  await mongoose.connect('mongodb://localhost:27017/mestodb', {
-  });
-  app.listen(PORT, ()=>{
-    console.log('TEST express');
-  });
-};
+async function main() {
+  await mongoose.connect('mongodb://localhost:27017/mestodb', {});
+  app.listen(PORT, () => {});
+}
 
 main();
