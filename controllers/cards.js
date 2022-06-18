@@ -1,10 +1,11 @@
 const Card = require('../models/card');
+const { CAST_ERROR, FORBIDDEN_ERROR, NOT_FOUND_ERROR, SERVER_ERROR } = require('../utils/constants');
 
 /**получить все карточки */
 module.exports.getCards=(req, res) => {
   Card.find({})
     .then(card => res.status(200).send({ data: card }))
-    .catch((err) => res.status(500).send({message: 'Ошибка сервера'}));
+    .catch((err) => res.status(SERVER_ERROR).send({message: 'На сервере произошла ошибка'}));
 };
 
 /** создать карточку */
@@ -16,14 +17,14 @@ module.exports.createCard = async (req, res) => {
     res.status(200).send({ data: card })
   }catch(err){
     if(err.name === "Not Found"){
-      res.status(404).send({message: 'Карточка с указанным id не найдена'})
+      res.status(NOT_FOUND_ERROR).send({message: 'Карточка с указанным id не найдена'})
       return
     }
     if(err.name === "ValidationError" || err.name === "CastError"){
-      res.status(400).send({message: 'Введены некорректные данные'});
+      res.status(CAST_ERROR).send({message: 'Введены некорректные данные'});
       return
     }
-    res.status(500).send({message: 'Ошибка сервера'})
+    res.status(SERVER_ERROR).send({message: 'На сервере произошла ошибка'})
   }
 };
 
@@ -34,21 +35,21 @@ module.exports.deleteCard = (req, res)=>{
   Card.findByIdAndRemove(cardId)
     .then((card)=>{
       if(!card){
-        res.status(404).send({message: 'Карточка с указанным id не найдена'})
+        res.status(NOT_FOUND_ERROR).send({message: 'Карточка с указанным id не найдена'})
         return
       }
       res.status(200).send({ data: card, message: "Карточка удалена"  })
     })
     .catch((err)=>{
       if(err.name === "ValidationError" || err.name === "CastError"){
-        res.status(400).send({message: 'Введены некорректные данные'});
+        res.status(CAST_ERROR).send({message: 'Введены некорректные данные'});
         return
       }
       if(String(userId) !== String(card.owner._id)){
-        res.status(403).send({message: 'Карточка не может быть удалена'})
+        res.status(FORBIDDEN_ERROR).send({message: 'Карточка не может быть удалена'})
         return
       }
-      res.status(500).send({message: 'Ошибка сервера'})
+      res.status(SERVER_ERROR).send({message: 'На сервере произошла ошибка'})
     })
 };
 
@@ -59,17 +60,17 @@ module.exports.likeCard = (req, res)=>{
   Card.findByIdAndUpdate(  cardId, { $addToSet: { likes: userId } }, { new: true })
     .then((card)=>{
       if(!card){
-        res.status(404).send({message: 'Карточка с указанным id не найдена'})
+        res.status(NOT_FOUND_ERROR).send({message: 'Карточка с указанным id не найдена'})
         return
       }
       res.status(200).send({ data: card })
     })
     .catch((err)=>{
       if(err.name === "ValidationError" || err.name === "CastError"){
-        res.status(400).send({ message: 'Введены некорректные данные'});
+        res.status(CAST_ERROR).send({ message: 'Введены некорректные данные'});
         return
       }
-      res.status(500).send({message: 'Ошибка сервера'})
+      res.status(SERVER_ERROR).send({message: 'На сервере произошла ошибка'})
     })
 };
 
@@ -80,20 +81,16 @@ module.exports.dislikeCard = (req, res)=>{
   Card.findByIdAndUpdate(cardId, { $pull: { likes: userId } }, { new: true })
     .then((card)=>{
       if(!card){
-        res.status(404).send({message: 'Карточка с указанным id не найдена'})
+        res.status(NOT_FOUND_ERROR).send({message: 'Карточка с указанным id не найдена'})
         return
       }
       res.status(200).send({ data: card })
     })
     .catch((err)=>{
       if(err.name === "ValidationError" || err.name === "CastError"){
-        res.status(400).send({err, message: 'Введены некорректные данные'});
+        res.status(CAST_ERROR).send({err, message: 'Введены некорректные данные'});
         return
       }
-      res.status(500).send({message: 'Ошибка сервера'})
+      res.status(SERVER_ERROR).send({message: 'На сервере произошла ошибка'})
     })
 };
-
-// "62ab1e0e9eb04686deff560c"
-// "62ac920b4e00b91d025a5af6"
-// "62ac92244e00b91d025a5af8"
