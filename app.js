@@ -14,8 +14,8 @@ app.use(owner);
 /** роутеры пользователей и карточек */
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
-app.use('*', (req, res, next) => {
-  res.status(NOT_FOUND_ERROR).send("Страница не найдена")
+app.use('*', (req, res) => {
+  res.status(NOT_FOUND_ERROR).send({message: "Страница не найдена"})
 })
 
 /** подключение к mongo и серверу */
