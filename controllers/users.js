@@ -62,7 +62,7 @@ module.exports.updateUser = (req, res) => {
   User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
     .orFail(() => new Error('Пользователь по указанному id не найден'))
     .then((req) => {
-      res.status(200).send({ req });
+      res.status(200).send({ req: { name, about } });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
