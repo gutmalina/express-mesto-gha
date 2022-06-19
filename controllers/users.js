@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
@@ -56,19 +57,46 @@ module.exports.createUser = (req, res) => {
 };
 
 /** обновить данные пользователя */
-module.exports.updateUser = async (req, res) => {
+// module.exports.updateUser = async (req, res) => {
+//   const { name, about } = req.body;
+//   const userId = req.user._id;
+//   try {
+//     const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true }).orFail(() => Error('Пользователь по указанному id не найден'));
+//     res.status(200).send({ user });
+//   } catch (err) {
+//     if (err.name === 'ValidationError' || err.name === 'CastError') {
+//       res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
+//       return;
+//     }
+//     res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+//   }
+// };
+
+module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
-  const userId = req.user._id;
-  try {
-    const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true }).orFail(() => Error('Пользователь по указанному id не найден'));
-    res.status(200).send({ user });
-  } catch (err) {
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
-      res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
-      return;
-    }
-    res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-  }
+  User.findByIdAndUpdate(
+    req.user,
+    { name, about },
+    { runValidators: true, new: true },
+  )
+    .then((user) => {
+      if (!user) {
+        res
+          .status(NOT_FOUND_ERROR)
+          .send({ message: 'Пользователь по указанному _id не найден' });
+        return;
+      }
+      res.status(200).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(CAST_ERROR).send({
+          message: 'Переданы некорректные данные при обновлении профиля',
+        });
+      } else {
+        res.status(SERVER_ERROR).send({ message: 'Ошибка по умолчанию' });
+      }
+    });
 };
 
 /** обновить аватар пользователя */
