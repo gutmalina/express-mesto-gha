@@ -62,7 +62,7 @@ module.exports.updateUser = async (req, res) => {
   const userId = req.user._id;
   try {
     const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true }).orFail(() => Error('Пользователь по указанному id не найден'));
-    res.status(200).send({ user });
+    res.status(200).send(user);
   } catch (err) {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
       res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
@@ -78,7 +78,7 @@ module.exports.updateAvatar = async (req, res) => {
   const userId = req.user._id;
   try {
     const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true }).orFail(() => Error('Пользователь по указанному id не найден'));
-    res.status(200).send({ user });
+    res.status(200).send(user);
   } catch (err) {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
       res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
@@ -87,18 +87,3 @@ module.exports.updateAvatar = async (req, res) => {
     res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
   }
 };
-
-/** удалить user по ID */
-// module.exports.deleteUser = (req, res) => {
-//   User.findByIdAndRemove('62a8bc1c12020f86156e05b0')
-//     .then((user) => {
-//       res.status(200).send({ data: user });
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         res.status(CAST_ERROR).send({ message: 'Введены некорректные данные' });
-//         return;
-//       }
-//       res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-//     });
-// };
