@@ -11,8 +11,8 @@ const {
 /** получить всех пользователей */
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then((user) => {
-      res.status(200).send({ data: user });
+    .then((users) => {
+      res.status(200).send({ data: users });
     })
     .catch((err) => {
       res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
@@ -43,10 +43,10 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => {
-      res.status(200).send({ data: user });
+      res.status(201).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
         return;
       }

@@ -13,8 +13,8 @@ const {
 /** получить все карточки */
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((card) => {
-      res.status(200).send({ data: card });
+    .then((cards) => {
+      res.status(200).send({ data: cards });
     })
     .catch((err) => {
       res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
@@ -27,13 +27,13 @@ module.exports.createCard = async (req, res) => {
   const owner = req.user._id;
   try {
     const card = await Card.create({ name, link, owner });
-    res.status(200).send({ data: card });
+    res.status(201).send({ data: card });
   } catch (err) {
     if (err.name === 'Not Found') {
       res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным id не найдена' });
       return;
     }
-    if (err.name === 'ValidationError' || err.name === 'CastError') {
+    if (err.name === 'ValidationError') {
       res.status(CAST_ERROR).send({ message: 'Введены некорректные данные' });
       return;
     }
@@ -54,7 +54,7 @@ module.exports.deleteCard = (req, res) => {
       res.status(200).send({ data: card, message: 'Карточка удалена' });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         res.status(CAST_ERROR).send({ message: 'Введены некорректные данные' });
         return;
       }
@@ -79,7 +79,7 @@ module.exports.likeCard = (req, res) => {
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err.name === 'CastError') {
         res.status(CAST_ERROR).send({ message: 'Введены некорректные данные' });
         return;
       }
@@ -100,8 +100,8 @@ module.exports.dislikeCard = (req, res) => {
       res.status(200).send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(CAST_ERROR).send({ err, message: 'Введены некорректные данные' });
+      if (err.name === 'CastError') {
+        res.status(CAST_ERROR).send({ message: 'Введены некорректные данные' });
         return;
       }
       res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
