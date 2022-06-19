@@ -61,7 +61,7 @@ module.exports.updateUser = (req, res) => {
   User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
     .orFail(() => new Error('Пользователь по указанному id не найден'))
     .then((user) => {
-      res.status(200).send({ name, about });
+      res.status(200).send({ user: { name, about } });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -79,7 +79,7 @@ module.exports.updateAvatar = (req, res) => {
   User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
     .orFail(() => new Error('Пользователь по указанному id не найден'))
     .then((user) => {
-      res.status(200).send({ avatar });
+      res.status(200).send({ user: { avatar } });
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
