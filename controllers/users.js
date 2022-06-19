@@ -72,19 +72,17 @@ module.exports.updateUser = async (req, res) => {
 };
 
 /** обновить аватар пользователя */
-module.exports.updateAvatar = (req, res) => {
+module.exports.updateAvatar = async (req, res) => {
   const { avatar } = req.body;
   const userId = req.user._id;
-  User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
-    .orFail(() => new Error('Пользователь по указанному id не найден'))
-    .then((req) => {
-      res.status(200).send({ avatar: req.avatar });
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
-        return;
-      }
-      res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-    });
+  try {
+    const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true }).orFail(() => Error('Пользователь по указанному id не найден'));
+    res.status(200).send({ user });
+  } catch (err) {
+    if (err.name === 'ValidationError' || err.name === 'CastError') {
+      res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
+      return;
+    }
+    res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+  }
 };
