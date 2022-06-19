@@ -29,10 +29,6 @@ module.exports.createCard = async (req, res) => {
     const card = await Card.create({ name, link, owner });
     res.status(201).send({ data: card });
   } catch (err) {
-    if (err.name === 'Not Found') {
-      res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным id не найдена' });
-      return;
-    }
     if (err.name === 'ValidationError') {
       res.status(CAST_ERROR).send({ message: 'Введены некорректные данные' });
       return;
@@ -51,15 +47,15 @@ module.exports.deleteCard = (req, res) => {
         res.status(NOT_FOUND_ERROR).send({ message: 'Карточка с указанным id не найдена' });
         return;
       }
-      res.status(200).send({ data: card, message: 'Карточка удалена' });
+      if (String(userId) !== String(card.owner._id)) {
+        res.status(FORBIDDEN_ERROR).send({ message: 'Карточка не может быть удалена' });
+        return;
+      }
+      res.status(200).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(CAST_ERROR).send({ message: 'Введены некорректные данные' });
-        return;
-      }
-      if (String(userId) !== String(card.owner._id)) {
-        res.status(FORBIDDEN_ERROR).send({ message: 'Карточка не может быть удалена' });
         return;
       }
       res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
