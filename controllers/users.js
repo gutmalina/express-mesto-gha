@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable prefer-destructuring */
@@ -58,7 +59,7 @@ module.exports.createUser = (req, res) => {
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
   const userId = req.user._id;
-  User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(userId, { name, about }, { returnNewDocument: true, runValidators: true })
     .orFail(() => new Error('Пользователь по указанному id не найден'))
     .then((user) => {
       res.status(200).send({ data: user });
