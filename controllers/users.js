@@ -60,13 +60,13 @@ module.exports.updateUser = (req, res) => {
   const userId = req.user._id;
   User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
     .then((user) => {
-      res.status(200).send({ data: { name, about } });
-    })
-    .catch((err) => {
-      if (err.name === 'Not Found') {
+      if (!user) {
         res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
         return;
       }
+      res.status(200).send({ name, about });
+    })
+    .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
         return;
@@ -81,13 +81,13 @@ module.exports.updateAvatar = (req, res) => {
   const userId = req.user._id;
   User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
     .then((user) => {
-      res.status(200).send({ data: { avatar } });
-    })
-    .catch((err) => {
-      if (err.name === 'Not Found') {
+      if (!user) {
         res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
         return;
       }
+      res.status(200).send({ avatar });
+    })
+    .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
         return;
