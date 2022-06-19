@@ -4,13 +4,13 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minlength: 2,
+    minlength: 1,
     maxlength: 30,
   },
   about: {
     type: String,
     required: true,
-    minlength: 2,
+    minlength: 1,
     maxlength: 30,
   },
   avatar: {
@@ -20,4 +20,3 @@ const userSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('user', userSchema);
-//
