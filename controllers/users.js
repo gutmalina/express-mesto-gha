@@ -61,10 +61,17 @@ module.exports.updateUser = async (req, res) => {
   const { name, about } = req.body;
   const userId = req.user._id;
   try {
-    const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true });
-    // .orFail(() => Error('Пользователь по указанному id не найден'));
+    const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
+      .orFail(() => {
+        const err = new Error('Пользователь по указанному id не найден');
+        err.name = 'NotFoundError';
+        throw err;
+      });
     res.status(200).send({ user: { name, about } });
   } catch (err) {
+    if (err.name === 'NotFoundError') {
+      res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
+    }
     if (err.name === 'ValidationError' || err.name === 'CastError') {
       res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
       return;
