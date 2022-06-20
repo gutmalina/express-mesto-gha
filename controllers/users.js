@@ -63,10 +63,6 @@ module.exports.updateUser = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true });
     // .orFail(() => Error('Пользователь по указанному id не найден'));
-    if (!user) {
-      res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
-      return;
-    }
     res.status(200).send(user);
   } catch (err) {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
