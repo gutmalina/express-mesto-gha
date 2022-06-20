@@ -61,7 +61,7 @@ module.exports.updateUser = async (req, res) => {
   const { name, about } = req.body;
   const userId = req.user._id;
   try {
-    const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
+    const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true });
     // .orFail(() => Error('Пользователь по указанному id не найден'));
     if (!user) {
       res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
