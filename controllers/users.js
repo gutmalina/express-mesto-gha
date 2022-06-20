@@ -81,7 +81,7 @@ module.exports.updateAvatar = async (req, res) => {
     const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true });
     // .orFail(() => Error('Пользователь по указанному id не найден'));
     if (!user) {
-      Promise.reject(new Error('Пользователь по указанному id не найден'));
+      res.status(NOT_FOUND_ERROR).send('Пользователь по указанному id не найден');
       return;
     }
     res.status(200).send({ avatar: user.avatar });
