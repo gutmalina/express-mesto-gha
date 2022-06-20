@@ -85,10 +85,16 @@ module.exports.updateAvatar = async (req, res) => {
   const { avatar } = req.body;
   const userId = req.user._id;
   try {
-    const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true });
-    // .orFail(() => Error('Пользователь по указанному id не найден'));
+    const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
+      .orFail(() => {
+        const err = new Error('Пользователь по указанному id не найден');
+        err.name = 'NotFoundError';
+      });
     res.status(200).send({ user: { avatar } });
   } catch (err) {
+    if (err.name === 'NotFoundError') {
+      res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
+    }
     if (err.name === 'ValidationError' || err.name === 'CastError') {
       res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
       return;
