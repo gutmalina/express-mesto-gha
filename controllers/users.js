@@ -63,7 +63,8 @@ module.exports.updateUser = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true });
     // .orFail(() => Error('Пользователь по указанному id не найден'));
-    res.status(200).send({ user });
+    // res.status(200).send({ user });
+    res.status(200).send({ data: user });
   } catch (err) {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
       res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
@@ -80,7 +81,8 @@ module.exports.updateAvatar = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true });
     // .orFail(() => Error('Пользователь по указанному id не найден'));
-    res.status(200).send({ avatar: user.avatar });
+    // res.status(200).send({ user });
+    res.status(200).send({ data: user });
   } catch (err) {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
       res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
