@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 /* eslint-disable max-len */
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
@@ -82,7 +81,8 @@ module.exports.updateAvatar = async (req, res) => {
     const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true });
     // .orFail(() => Error('Пользователь по указанному id не найден'));
     if (!user) {
-      return Promise.reject(new Error('Пользователь по указанному id не найден'));
+      Promise.reject(new Error('Пользователь по указанному id не найден'));
+      return;
     }
     res.status(200).send({ avatar: user.avatar });
   } catch (err) {
