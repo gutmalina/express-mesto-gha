@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable max-len */
 /* eslint-disable no-shadow */
 /* eslint-disable no-unused-vars */
@@ -63,7 +64,7 @@ module.exports.updateUser = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true });
     // .orFail(() => Error('Пользователь по указанному id не найден'));
-    res.status(200).send({ name: user.name, about: user.about });
+    res.status(200).send({ user });
   } catch (err) {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
       res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
@@ -78,7 +79,11 @@ module.exports.updateAvatar = async (req, res) => {
   const { avatar } = req.body;
   const userId = req.user._id;
   try {
-    const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true }).orFail(() => Error('Пользователь по указанному id не найден'));
+    const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true });
+    // .orFail(() => Error('Пользователь по указанному id не найден'));
+    if (!user) {
+      return Promise.reject(new Error('Пользователь по указанному id не найден'));
+    }
     res.status(200).send({ avatar: user.avatar });
   } catch (err) {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
