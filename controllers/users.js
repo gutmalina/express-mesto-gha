@@ -61,8 +61,7 @@ module.exports.updateUser = async (req, res) => {
   const { name, about } = req.body;
   const userId = req.user._id;
   try {
-    const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true });
-    // .orFail(() => Error('Пользователь по указанному id не найден'));
+    const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true }).orFail(() => Error('Пользователь по указанному id не найден'));
     res.status(200).send({ user });
   } catch (err) {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -78,12 +77,7 @@ module.exports.updateAvatar = async (req, res) => {
   const { avatar } = req.body;
   const userId = req.user._id;
   try {
-    const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true });
-    // .orFail(() => Error('Пользователь по указанному id не найден'));
-    if (!user) {
-      res.status(NOT_FOUND_ERROR).send('Пользователь по указанному id не найден');
-      return;
-    }
+    const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true }).orFail(() => Error('Пользователь по указанному id не найден'));
     res.status(200).send({ avatar: user.avatar });
   } catch (err) {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
