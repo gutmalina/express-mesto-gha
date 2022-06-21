@@ -67,10 +67,11 @@ module.exports.updateUser = async (req, res) => {
         err.name = 'NotFoundError';
         throw err;
       });
-    res.status(200).send({ user: { name, about } });
+    res.status(200).send({ data: { user } });
   } catch (err) {
     if (err.name === 'NotFoundError') {
       res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
+      return;
     }
     if (err.name === 'ValidationError' || err.name === 'CastError') {
       res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
@@ -89,11 +90,13 @@ module.exports.updateAvatar = async (req, res) => {
       .orFail(() => {
         const err = new Error('Пользователь по указанному id не найден');
         err.name = 'NotFoundError';
+        throw err;
       });
-    res.status(200).send({ user: { avatar } });
+    res.status(200).send({ data: { user } });
   } catch (err) {
     if (err.name === 'NotFoundError') {
       res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
+      return;
     }
     if (err.name === 'ValidationError' || err.name === 'CastError') {
       res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
