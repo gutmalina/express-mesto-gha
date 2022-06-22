@@ -1,11 +1,6 @@
-/* eslint-disable no-undef */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-unused-vars */
 const Card = require('../models/card');
 const {
   CAST_ERROR,
-  FORBIDDEN_ERROR,
   NOT_FOUND_ERROR,
   SERVER_ERROR,
 } = require('../utils/constants');
@@ -16,7 +11,7 @@ module.exports.getCards = (req, res) => {
     .then((cards) => {
       res.status(200).send({ data: cards });
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
@@ -39,8 +34,7 @@ module.exports.createCard = async (req, res) => {
 
 /** удалить карточку по ID */
 module.exports.deleteCard = (req, res) => {
-  const cardId = req.params.cardId;
-  const userId = req.user._id;
+  const { cardId } = req.params;
   Card.findByIdAndRemove(cardId)
     .then((card) => {
       if (!card) {
@@ -60,7 +54,7 @@ module.exports.deleteCard = (req, res) => {
 
 /** поставить лайк карточке */
 module.exports.likeCard = (req, res) => {
-  const cardId = req.params.cardId;
+  const { cardId } = req.params;
   const userId = req.user._id;
   Card.findByIdAndUpdate(cardId, { $addToSet: { likes: userId } }, { new: true })
     .then((card) => {
@@ -81,7 +75,7 @@ module.exports.likeCard = (req, res) => {
 
 /** удалить лайк у карточки */
 module.exports.dislikeCard = (req, res) => {
-  const cardId = req.params.cardId;
+  const { cardId } = req.params;
   const userId = req.user._id;
   Card.findByIdAndUpdate(cardId, { $pull: { likes: userId } }, { new: true })
     .then((card) => {

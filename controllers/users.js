@@ -1,8 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable no-shadow */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable prefer-destructuring */
 const User = require('../models/user');
 const {
   CAST_ERROR,
@@ -16,14 +11,14 @@ module.exports.getUsers = (req, res) => {
     .then((users) => {
       res.status(200).send({ data: users });
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
 /** получить пользователя по ID */
 module.exports.getUserById = async (req, res) => {
-  const userId = req.params.userId;
+  const { userId } = req.params;
   try {
     const user = await User.findById(userId);
     if (!user) {
@@ -61,7 +56,11 @@ module.exports.updateUser = async (req, res) => {
   const { name, about } = req.body;
   const userId = req.user._id;
   try {
-    const user = await User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { name, about },
+      { new: true, runValidators: true },
+    )
       .orFail(() => {
         const err = new Error('Пользователь по указанному id не найден');
         err.name = 'NotFoundError';
@@ -86,7 +85,11 @@ module.exports.updateAvatar = async (req, res) => {
   const { avatar } = req.body;
   const userId = req.user._id;
   try {
-    const user = await User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { avatar },
+      { new: true, runValidators: true },
+    )
       .orFail(() => {
         const err = new Error('Пользователь по указанному id не найден');
         err.name = 'NotFoundError';
