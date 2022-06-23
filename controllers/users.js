@@ -1,9 +1,31 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const {
   CAST_ERROR,
   NOT_FOUND_ERROR,
   SERVER_ERROR,
 } = require('../utils/constants');
+
+/** аутентификация - вход по почте и паролю  */
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+      return bcrypt.compare(password, user.password);
+    })
+    .then((matched) => {
+      if (!matched) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+      res.send({ message: 'Всё верно!' });
+    })
+    .catch((err) => {
+      res.status(401).send({ message: err.message });
+    });
+};
 
 /** получить всех пользователей */
 module.exports.getUsers = (req, res) => {
@@ -37,7 +59,8 @@ module.exports.getUserById = async (req, res) => {
 
 /** добавить пользователя */
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
+  const { email, password, name, about, avatar } = req.body;
+  bcrypt.hash(password, 10);
   User.create({ name, about, avatar })
     .then((user) => {
       res.status(201).send({ data: user });
