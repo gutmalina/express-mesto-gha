@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const {
   CAST_ERROR,
@@ -6,25 +7,40 @@ const {
   SERVER_ERROR,
 } = require('../utils/constants');
 
-/** аутентификация - вход по почте и паролю  */
+/** аутентификация - вход по email и паролю  */
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
-  User.findOne({ email })
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
-      return bcrypt.compare(password, user.password);
-    })
-    .then((matched) => {
-      if (!matched) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
+      const token = jwt.sign(
+        { _id: user._id },
+        'some-secret-key',
+        { expiresIn: '7d' },
+      );
       res.send({ message: 'Всё верно!' });
     })
     .catch((err) => {
       res.status(401).send({ message: err.message });
     });
+};
+
+/** получение информации о пользователе */
+module.exports.getMe = async (req, res) => {
+  const userId = req.user._id;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
+      return;
+    }
+    res.status(200).send({ data: user });
+  } catch (err) {
+    if (err.name === 'CastError') {
+      res.status(CAST_ERROR).send({ message: 'Введен некорректный id пользователя' });
+      return;
+    }
+    res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+  }
 };
 
 /** получить всех пользователей */

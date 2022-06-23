@@ -1,6 +1,8 @@
-/* eslint-disable no-console */
-const mongoose = require('mongoose');
 const express = require('express');
+const mongoose = require('mongoose');
+
+const { createUser, login } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 const owner = require('./middlewares/owner');
 const { NOT_FOUND_ERROR } = require('./utils/constants');
 
@@ -18,9 +20,16 @@ app.use(owner);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
+/** обработка несуществующих роутов */
 app.use((req, res) => {
   res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
 });
+
+app.post('/signin', login);
+app.post('/signup', createUser);
+
+/** авторизация */
+app.use(auth);
 
 /** подключение к mongo и серверу */
 async function main() {
