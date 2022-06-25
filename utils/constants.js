@@ -4,6 +4,7 @@ const FORBIDDEN_ERROR = 403;
 const NOT_FOUND_ERROR = 404;
 const CONFLICT_ERROR = 409;
 const SERVER_ERROR = 500;
+const URL_REGEX = /^https?:\/\/\w\S{1,}#?$/gi;
 
 module.exports = {
   CAST_ERROR,
@@ -12,4 +13,5 @@ module.exports = {
   NOT_FOUND_ERROR,
   CONFLICT_ERROR,
   SERVER_ERROR,
+  URL_REGEX,
 };
