@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { celebrate, Joi } = require('celebrate');
+const { errors } = require('celebrate');
 
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
@@ -43,6 +44,8 @@ app.post('/signup', celebrate({
 
 /** авторизация */
 app.use(auth);
+
+app.use(errors());
 
 /** мидлвэр ошибок */
 app.use(error);
