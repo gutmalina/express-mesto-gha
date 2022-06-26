@@ -16,6 +16,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /** роутеры пользователей и карточек */
+app.use('/signin', require('./routes/users'));
+app.use('/signup', require('./routes/users'));
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
@@ -23,24 +25,6 @@ app.use('/cards', require('./routes/cards'));
 app.use((req, res) => {
   res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
 });
-
-/** роутеры не требующие авторизации */
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().length(10),
-  }),
-}), login);
-
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().length(10),
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().required(),
-  }),
-}), createUser);
 
 /** авторизация */
 app.use(auth);
