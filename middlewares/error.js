@@ -8,6 +8,4 @@ module.exports = (err, req, res, next) => {
     .send({
       message: statusCode === SERVER_ERROR ? 'На сервере произошла ошибка' : message,
     });
-
-  next();
 };

@@ -12,33 +12,25 @@ const {
 } = require('../controllers/users');
 
 /** создать пользователя */
-router.post('/', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().length(10),
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().required(),
-  }),
-}), createUser);
+router.post('/signup', createUser);
 
-router.post('/', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().length(10),
-  }),
-}), login);
+/** аутентификация - вход по email и паролю  */
+router.post('/signin', login);
 
+/** получение информации о пользователе */
 router.get('/me', getMe);
 
+/** получить всех пользователей */
 router.get('/', getUsers);
 
+/** получить пользователя по ID */
 router.get('/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().required().length(24),
   }),
 }), getUserById);
 
+/** обновить данные пользователя */
 router.patch('/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -46,6 +38,7 @@ router.patch('/me', celebrate({
   }),
 }), updateUser);
 
+/** обновить аватар пользователя */
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
     avatar: Joi.string().required().regex(RegExp(URL_REGEX)),
