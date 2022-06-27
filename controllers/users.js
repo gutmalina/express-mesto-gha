@@ -12,7 +12,7 @@ const generateToken = require('../helpers/jwt');
 const SALT_ROUNDS = 10;
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
 
-/** создать пользователя */
+/** добавление пользователя */
 module.exports.createUser = (req, res) => {
   const {
     email,
@@ -76,7 +76,7 @@ module.exports.login = (req, res) => {
     })
     .catch((err) => {
       if (err.statusCode === 'CastError') {
-        return res.status(CAST_ERROR).send({ message: err.message });
+        return res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
       }
       if (err.statusCode === FORBIDDEN_ERROR) {
         return res.status(FORBIDDEN_ERROR).send({ message: err.message });
