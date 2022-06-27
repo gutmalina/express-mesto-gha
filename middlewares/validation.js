@@ -1,12 +1,12 @@
 const { celebrate, Joi } = require('celebrate');
 
-const regexLink = /^https?:\/\/\w\S{1,}#?$/gi;
+const REGEX_LINK = require('../utils/constants');
 
 const validateCreateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().required().pattern((regexLink)),
+    avatar: Joi.string().pattern((REGEX_LINK)),
     email: Joi.string().required().email(),
     password: Joi.string().required().length(10),
   }),
