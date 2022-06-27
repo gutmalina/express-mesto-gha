@@ -8,10 +8,10 @@ const {
   updateUser,
   updateAvatar,
 } = require('../controllers/users');
-const validateUpdateUser = require('../middlewares/validation');
+const validateCreateUser = require('../middlewares/validation');
 
 /** создать пользователя */
-router.post('/signup', createUser);
+router.post('/signup', validateCreateUser, createUser);
 
 /** аутентификация - вход по email и паролю  */
 router.post('/signin', login);
@@ -26,7 +26,7 @@ router.get('/', getUsers);
 router.get('/:userId', getUserById);
 
 /** обновить данные пользователя */
-router.patch('/me', validateUpdateUser, updateUser);
+router.patch('/me', updateUser);
 
 /** обновить аватар пользователя */
 router.patch('/me/avatar', updateAvatar);
