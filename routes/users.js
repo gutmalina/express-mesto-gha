@@ -7,13 +7,13 @@ const {
   getUserById,
   updateUser,
   updateAvatar,
-  validateUpdateAvatar,
 } = require('../controllers/users');
 const {
   validateCreateUser,
   validateLogin,
   validateGetUserById,
   validateUpdateUser,
+  validateUpdateAvatar,
 } = require('../middlewares/validation');
 
 /** добавление пользователя */
