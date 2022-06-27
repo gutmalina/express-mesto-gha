@@ -24,7 +24,7 @@ module.exports.createUser = (req, res) => {
   if (!email || !password) {
     return res.status(FORBIDDEN_ERROR).send({ message: 'Не передан email или пароль' });
   }
-  bcrypt
+  return bcrypt
     .hash(password, SALT_ROUNDS)
     .then((hash) => User.create({
       email,
@@ -50,7 +50,7 @@ module.exports.login = (req, res) => {
   if (!email || !password) {
     return res.status(CAST_ERROR).send({ message: 'Не передан email или пароль' });
   }
-  User
+  return User
     .findOne({ email })
     .then((user) => {
       if (!user) {
@@ -93,12 +93,12 @@ module.exports.getMe = async (req, res) => {
     if (!user) {
       return res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
     }
-    res.status(200).send({ data: user });
+    return res.status(200).send({ data: user });
   } catch (err) {
     if (err.name === 'CastError') {
       return res.status(CAST_ERROR).send({ message: 'Введен некорректный id пользователя' });
     }
-    res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+    return res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
   }
 };
 

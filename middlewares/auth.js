@@ -1,6 +1,6 @@
 const checkToken = require('../helpers/jwt');
 const User = require('../models/user');
-const UNAUTHORIZED_ERROR = require('../utils/constants');
+const { SERVER_ERROR, UNAUTHORIZED_ERROR } = require('../utils/constants');
 
 /** авторизация */
 module.exports = (req, res, next) => {
@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
   const token = authorization.replace('Bearer', '');
   try {
     const payload = checkToken(token);
-    User
+    return User
       .findOne({ email: payload.email })
       .then((user) => {
         if (!user) {
@@ -20,7 +20,7 @@ module.exports = (req, res, next) => {
         req.user = { id: user._id };
         next();
       })
-      .catch(() => res.status(500).send({ message: 'Сервер' }));
+      .catch(() => res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' }));
   } catch (err) {
     return res.status(UNAUTHORIZED_ERROR).send({ message: 'Необходима авторизация' });
   }
