@@ -6,14 +6,12 @@ const {
 } = require('../utils/constants');
 
 /** получить все карточки */
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => {
       res.status(200).send({ data: cards });
     })
-    .catch(() => {
-      res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-    });
+    .catch(next);
 };
 
 /** создать карточку */
