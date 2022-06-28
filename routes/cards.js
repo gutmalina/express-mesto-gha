@@ -6,11 +6,26 @@ const {
   likeCard,
   dislikeCard,
 } = require('../controllers/cards');
+const {
+  validateCreateCard,
+  validateDeleteCard,
+  validateLikeCard,
+  validateDislikeCard,
+} = require('../middlewares/owner');
 
+/** получить все карточки */
 router.get('/', getCards);
-router.post('/', createCard);
-router.delete('/:cardId', deleteCard);
-router.put('/:cardId/likes', likeCard);
-router.delete('/:cardId/likes', dislikeCard);
+
+/** создать карточку */
+router.post('/', validateCreateCard, createCard);
+
+/** удалить карточку по ID */
+router.delete('/:cardId', validateDeleteCard, deleteCard);
+
+/** поставить лайк карточке */
+router.put('/:cardId/likes', validateLikeCard, likeCard);
+
+/** удалить лайк у карточки */
+router.delete('/:cardId/likes', validateDislikeCard, dislikeCard);
 
 module.exports = router;
