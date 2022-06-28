@@ -8,7 +8,7 @@ const {
 } = require('../controllers/cards');
 const {
   validateCreateCard,
-  // validateDeleteCard,
+  validateDeleteCard,
   validateLikeCard,
   validateDislikeCard,
 } = require('../middlewares/validation');
@@ -20,7 +20,7 @@ router.get('/', getCards);
 router.post('/', validateCreateCard, createCard);
 
 /** удалить карточку по ID */
-router.delete('/:cardId', deleteCard);
+router.delete('/:cardId', validateDeleteCard, deleteCard);
 
 /** поставить лайк карточке */
 router.put('/:cardId/likes', validateLikeCard, likeCard);
