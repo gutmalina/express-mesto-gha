@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const express = require('express');
+const { errors } = require('celebrate');
+
 const owner = require('./middlewares/owner');
+const error = require('./middlewares/error');
 const { NOT_FOUND_ERROR } = require('./utils/constants');
 
 const { PORT = 3000 } = process.env;
@@ -17,9 +20,16 @@ app.use(owner);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
+/** обработка несуществующих роутов */
 app.use((req, res) => {
   res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
 });
+
+/** обработчик ошибок celebrate */
+app.use(errors());
+
+/** централизованный обработчик ошибок */
+app.use(error);
 
 /** подключение к mongo и серверу */
 async function main() {
