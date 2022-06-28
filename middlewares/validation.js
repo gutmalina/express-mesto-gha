@@ -12,7 +12,7 @@ const validateCreateUser = celebrate({
 /** получить пользователя по ID */
 const validateGetUserById = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().length(24),
+    userId: Joi.string().length(24).hex(),
   }),
 });
 
@@ -42,21 +42,21 @@ const validateCreateCard = celebrate({
 /** удалить карточку по ID */
 const validateDeleteCard = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().length(24),
+    cardId: Joi.string().length(24).hex(),
   }),
 });
 
 /** поставить лайк карточке */
 const validateLikeCard = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().length(24),
+    cardId: Joi.string().length(24).hex(),
   }),
 });
 
 /** удалить лайк у карточки */
 const validateDislikeCard = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().length(24),
+    cardId: Joi.string().length(24).hex(),
   }),
 });
 

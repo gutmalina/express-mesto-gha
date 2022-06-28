@@ -37,10 +37,14 @@ module.exports.deleteCard = (req, res, next) => {
         throw new NotFoundError('Карточка с указанным id не найдена');
       }
       if (String(userId) !== String(card.owner._id)) {
-        throw new ForbiddenError('Карточка не может быть удалена');
+        next(new ForbiddenError('Карточка не может быть удалена'));
       }
-      card.remove();
-      res.status(200).send({ data: card });
+      Card.findByIdAndRemove(cardId)
+        // eslint-disable-next-line no-shadow
+        .then((card) => {
+          res.status(200).send({ data: card });
+        })
+        .catch(next);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -48,19 +52,6 @@ module.exports.deleteCard = (req, res, next) => {
       }
       next();
     });
-  // Card.findByIdAndRemove(cardId)
-  //   .then((card) => {
-  //     if (!card) {
-  //       throw new NotFoundError('Карточка с указанным id не найдена');
-  //     }
-  //     res.status(200).send({ data: card });
-  //   })
-  //   .catch((err) => {
-  //     if (err.name === 'CastError') {
-  //       next(new CastError('Введены некорректные данные'));
-  //     }
-  //     next();
-  //   });
 };
 
 /** поставить лайк карточке */
