@@ -37,10 +37,14 @@ module.exports.createUser = (req, res) => {
       res.status(201).send({ data: user });
     })
     .catch((err) => {
-      if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-        return res.status(CONFLICT_ERROR).send({ message: 'Пользователь с указанным email уже существует' });
+      if (err.name === 'ValidationError') {
+        res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
+        return;
       }
-      return res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
+      if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
+        res.status(CONFLICT_ERROR).send({ message: 'Пользователь с указанным email уже существует' });
+      }
+      res.status(SERVER_ERROR).send({ message: 'Ошибка сервера' });
     });
 };
 
