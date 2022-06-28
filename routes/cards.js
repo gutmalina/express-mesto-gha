@@ -11,7 +11,7 @@ const {
   validateDeleteCard,
   validateLikeCard,
   validateDislikeCard,
-} = require('../middlewares/owner');
+} = require('../middlewares/validation');
 
 /** получить все карточки */
 router.get('/', getCards);
