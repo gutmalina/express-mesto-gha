@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 const CastError = require('../errors/cast-error');
 const NotFoundError = require('../errors/not-found-error');
+const ForbiddenError = require('../errors/forbidden-error');
 
 /** получить все карточки */
 module.exports.getCards = (req, res, next) => {
@@ -29,11 +30,16 @@ module.exports.createCard = async (req, res, next) => {
 /** удалить карточку по ID */
 module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  Card.findByIdAndRemove(cardId)
+  const userId = req.user._id;
+  Card.findById(cardId)
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточка с указанным id не найдена');
       }
+      if (String(userId) !== String(card.owner._id)) {
+        throw new ForbiddenError('Карточка не может быть удалена');
+      }
+      card.remove();
       res.status(200).send({ data: card });
     })
     .catch((err) => {
@@ -42,6 +48,19 @@ module.exports.deleteCard = (req, res, next) => {
       }
       next();
     });
+  // Card.findByIdAndRemove(cardId)
+  //   .then((card) => {
+  //     if (!card) {
+  //       throw new NotFoundError('Карточка с указанным id не найдена');
+  //     }
+  //     res.status(200).send({ data: card });
+  //   })
+  //   .catch((err) => {
+  //     if (err.name === 'CastError') {
+  //       next(new CastError('Введены некорректные данные'));
+  //     }
+  //     next();
+  //   });
 };
 
 /** поставить лайк карточке */
