@@ -13,6 +13,7 @@ module.exports = (req, res, next) => {
     const payload = checkToken(token);
     return User
       .findOne({ email: payload.email })
+      // eslint-disable-next-line consistent-return
       .then((user) => {
         if (!user) {
           return res.status(UNAUTHORIZED_ERROR).send({ message: 'Необходима авторизация' });
@@ -20,7 +21,9 @@ module.exports = (req, res, next) => {
         req.user = { id: user._id };
         next();
       })
-      .catch(() => res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' }));
+      .catch(() => {
+        res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+      });
   } catch (err) {
     return res.status(UNAUTHORIZED_ERROR).send({ message: 'Необходима авторизация' });
   }
