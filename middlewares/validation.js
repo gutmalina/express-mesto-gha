@@ -1,18 +1,19 @@
 const { celebrate, Joi } = require('celebrate');
 
-// const REGEX_LINK = require('../utils/constants');
+const REGEX_LINK = require('../utils/constants');
 
+/** добавление пользователя */
 const validateCreateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string(),
-    // avatar: Joi.string().pattern((REGEX_LINK)),
+    avatar: Joi.string().regex(RegExp(REGEX_LINK)),
     email: Joi.string().required().email(),
     password: Joi.string().required().length(5),
   }),
 });
 
+/** аутентификация - вход по email и паролю  */
 const validateLogin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -20,12 +21,14 @@ const validateLogin = celebrate({
   }),
 });
 
+/** получить пользователя по ID */
 const validateGetUserById = celebrate({
   params: Joi.object().keys({
     userId: Joi.string().length(24),
   }),
 });
 
+/** обновить данные пользователя */
 const validateUpdateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -33,6 +36,7 @@ const validateUpdateUser = celebrate({
   }),
 });
 
+/** обновить аватар пользователя */
 const validateUpdateAvatar = celebrate({
   body: Joi.object().keys({
     avatar: Joi.string(),

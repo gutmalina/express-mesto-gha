@@ -22,11 +22,11 @@ router.post('/signup', validateCreateUser, createUser);
 /** аутентификация - вход по email и паролю  */
 router.post('/signin', validateLogin, login);
 
-/** получение информации о пользователе */
-router.get('/me', getMe);
-
 /** получить всех пользователей */
 router.get('/', getUsers);
+
+/** получение информации о пользователе */
+router.get('/me', getMe);
 
 /** получить пользователя по ID */
 router.get('/:userId', validateGetUserById, getUserById);
