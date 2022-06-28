@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 
-const auth = require('./middlewares/auth');
+// const auth = require('./middlewares/auth');
 const error = require('./middlewares/error');
 const { NOT_FOUND_ERROR } = require('./utils/constants');
 
