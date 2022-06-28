@@ -32,23 +32,19 @@ module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
   const userId = req.user._id;
   Card.findById(cardId)
+    .orFail(() => next(new NotFoundError('Карточка с указанным id не найдена')))
     .then((card) => {
-      if (!card) {
-        throw new NotFoundError('Карточка с указанным id не найдена');
-      }
       if (String(userId) !== String(card.owner._id)) {
         next(new ForbiddenError('Карточка не может быть удалена'));
       }
       Card.findByIdAndRemove(cardId)
-        // eslint-disable-next-line no-shadow
-        .then((card) => {
-          res.status(200).send({ data: card });
-        })
+        .then(() => res.status(200).send({ data: card }))
         .catch(next);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new CastError('Введены некорректные данные'));
+        // res.send(err);
       }
       next();
     });
