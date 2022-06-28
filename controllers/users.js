@@ -5,6 +5,22 @@ const {
   SERVER_ERROR,
 } = require('../utils/constants');
 
+/** добавить пользователя */
+module.exports.createUser = (req, res) => {
+  const { name, about, avatar } = req.body;
+  User.create({ name, about, avatar })
+    .then((user) => {
+      res.status(201).send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
+        return;
+      }
+      res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+    });
+};
+
 /** получить всех пользователей */
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -33,22 +49,6 @@ module.exports.getUserById = async (req, res) => {
     }
     res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
   }
-};
-
-/** добавить пользователя */
-module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
-    .then((user) => {
-      res.status(201).send({ data: user });
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
-        return;
-      }
-      res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-    });
 };
 
 /** обновить данные пользователя */
