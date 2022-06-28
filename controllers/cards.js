@@ -4,6 +4,7 @@ const {
   NOT_FOUND_ERROR,
   SERVER_ERROR,
 } = require('../utils/constants');
+const CastError = require('../errors/cast-error');
 
 /** получить все карточки */
 module.exports.getCards = (req, res, next) => {
@@ -15,7 +16,7 @@ module.exports.getCards = (req, res, next) => {
 };
 
 /** создать карточку */
-module.exports.createCard = async (req, res) => {
+module.exports.createCard = async (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   try {
@@ -23,10 +24,9 @@ module.exports.createCard = async (req, res) => {
     res.status(201).send({ data: card });
   } catch (err) {
     if (err.name === 'ValidationError') {
-      res.status(CAST_ERROR).send({ message: 'Введены некорректные данные' });
-      return;
+      next(new CastError('Введены некорректные данные'));
     }
-    res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+    next();
   }
 };
 
