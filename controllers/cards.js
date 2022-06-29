@@ -8,7 +8,9 @@ module.exports.getCards = (req, res, next) => {
   Card
     .find({})
     .then((cards) => {
-      res.status(200).send({ data: cards });
+      res
+        .status(200)
+        .send({ data: cards });
     })
     .catch(next);
 };
@@ -20,7 +22,9 @@ module.exports.createCard = async (req, res, next) => {
   Card
     .create({ name, link, owner })
     .then((card) => {
-      res.status(201).send({ data: card });
+      res
+        .status(201)
+        .send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -28,15 +32,6 @@ module.exports.createCard = async (req, res, next) => {
       }
       next();
     });
-  // try {
-  //   const card = await Card.create({ name, link, owner });
-  //   res.status(201).send({ data: card });
-  // } catch (err) {
-  //   if (err.name === 'ValidationError') {
-  //     next(new CastError('Введены некорректные данные'));
-  //   }
-  //   next();
-  // }
 };
 
 /** удалить карточку по ID */
@@ -45,14 +40,20 @@ module.exports.deleteCard = (req, res, next) => {
   const userId = req.user._id;
   Card
     .findById(cardId)
-    .orFail(() => next(new NotFoundError('Карточка с указанным id не найдена')))
+    .orFail(() => {
+      next(new NotFoundError('Карточка с указанным id не найдена'));
+    })
     .then((card) => {
       if (String(userId) !== String(card.owner._id)) {
         next(new ForbiddenError('Карточка не может быть удалена'));
       }
       Card
         .findByIdAndRemove(cardId)
-        .then(() => res.status(200).send({ data: card }))
+        .then(() => {
+          res
+            .status(200)
+            .send({ data: card });
+        })
         .catch(next);
     })
     .catch((err) => {
@@ -68,12 +69,18 @@ module.exports.likeCard = (req, res, next) => {
   const { cardId } = req.params;
   const userId = req.user._id;
   Card
-    .findByIdAndUpdate(cardId, { $addToSet: { likes: userId } }, { new: true })
+    .findByIdAndUpdate(
+      cardId,
+      { $addToSet: { likes: userId } },
+      { new: true },
+    )
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточка с указанным id не найдена');
       }
-      res.status(200).send({ data: card });
+      res
+        .status(200)
+        .send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -88,12 +95,18 @@ module.exports.dislikeCard = (req, res, next) => {
   const { cardId } = req.params;
   const userId = req.user._id;
   Card
-    .findByIdAndUpdate(cardId, { $pull: { likes: userId } }, { new: true })
+    .findByIdAndUpdate(
+      cardId,
+      { $pull: { likes: userId } },
+      { new: true },
+    )
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточка с указанным id не найдена');
       }
-      res.status(200).send({ data: card });
+      res
+        .status(200)
+        .send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
