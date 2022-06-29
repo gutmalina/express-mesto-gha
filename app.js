@@ -5,8 +5,8 @@ const { errors } = require('celebrate');
 const owner = require('./middlewares/owner');
 const error = require('./middlewares/error');
 const { NOT_FOUND_ERROR } = require('./utils/constants');
-const createUser = require('./controllers/users');
-const validateCreateUser = require('./middlewares/validation');
+const { createUser } = require('./controllers/users');
+const { validateCreateUser } = require('./middlewares/validation');
 
 const { PORT = 3000 } = process.env;
 
@@ -15,11 +15,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/** временный мидлвэр - ID автора карточки */
-app.use(owner);
-
 /** роутеры регистрации и аутентификации */
 app.post('/signup', validateCreateUser, createUser);
+
+/** временный мидлвэр - ID автора карточки */
+app.use(owner);
 
 /** роутеры пользователей и карточек */
 app.use('/users', require('./routes/users'));
