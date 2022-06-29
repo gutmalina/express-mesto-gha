@@ -1,17 +1,7 @@
 const mongoose = require('mongoose');
+const URL_REGEX = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    length: 5,
-    select: false,
-  },
   name: {
     type: String,
     default: 'Жак-Ив Кусто',
@@ -27,6 +17,22 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate: {
+      validator(v) {
+        return URL_REGEX.test(v);
+      },
+    },
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    length: 5,
+    select: false,
   },
 });
 
