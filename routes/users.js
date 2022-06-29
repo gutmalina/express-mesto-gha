@@ -2,19 +2,14 @@ const router = require('express').Router();
 const {
   getUsers,
   getUserById,
-  createUser,
   updateUser,
   updateAvatar,
 } = require('../controllers/users');
 const {
-  validateCreateUser,
   validateGetUserById,
   validateUpdateUser,
   validateUpdateAvatar,
 } = require('../middlewares/validation');
-
-/** добавить пользователя */
-router.post('/', validateCreateUser, createUser);
 
 /** получить всех пользователей */
 router.get('/', getUsers);
