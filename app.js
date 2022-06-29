@@ -23,12 +23,12 @@ app.post('/signin', validateLogin, login);
 // /** временный мидлвэр - ID автора карточки */
 // app.use(owner);
 
-/** защита авторизацией */
-app.use(auth);
+// /** защита авторизацией */
+// app.use(auth);
 
 /** роутеры пользователей и карточек */
-app.use('/users', require('./routes/users'));
-app.use('/cards', require('./routes/cards'));
+app.use('/users', auth, require('./routes/users'));
+app.use('/cards', auth, require('./routes/cards'));
 
 /** обработка несуществующих роутов */
 app.use((req, res, next) => {

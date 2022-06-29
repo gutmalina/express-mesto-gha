@@ -23,7 +23,7 @@ module.exports.createUser = (req, res, next) => {
   }
   return bcrypt
     .hash(password, SALT_ROUNDS)
-    .then((hash) => {
+    .then((hash) => (
       User
         .create({
           email,
@@ -31,8 +31,8 @@ module.exports.createUser = (req, res, next) => {
           name,
           about,
           avatar,
-        });
-    })
+        })
+    ))
     .then((user) => {
       res
         .status(201)
@@ -52,7 +52,7 @@ module.exports.createUser = (req, res, next) => {
       if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
         next(new ConflictError('Пользователь с указанным email уже существует'));
       }
-      next();
+      next(err);
     });
 };
 
@@ -94,7 +94,7 @@ module.exports.login = (req, res, next) => {
       if (err.statusCode === 'ForbiddenError') {
         next(new ForbiddenError({ message: err.message }));
       }
-      next();
+      next(err);
     });
 };
 
@@ -127,7 +127,7 @@ module.exports.getMe = (req, res, next) => {
       if (err.name === 'CastError') {
         next(new CastError('Введен некорректный id пользователя'));
       }
-      next();
+      next(err);
     });
 };
 
@@ -148,7 +148,7 @@ module.exports.getUserById = (req, res, next) => {
       if (err.name === 'CastError') {
         next(new CastError('Введен некорректный id пользователя'));
       }
-      next();
+      next(err);
     });
 };
 
@@ -179,7 +179,7 @@ module.exports.updateUser = (req, res, next) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new CastError('Введены некорректные данные пользователя'));
       }
-      next();
+      next(err);
     });
 };
 
@@ -210,6 +210,6 @@ module.exports.updateAvatar = (req, res, next) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new CastError('Введены некорректные данные пользователя'));
       }
-      next();
+      next(err);
     });
 };
