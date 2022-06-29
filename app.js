@@ -4,7 +4,7 @@ const { errors } = require('celebrate');
 
 const owner = require('./middlewares/owner');
 const error = require('./middlewares/error');
-const { NOT_FOUND_ERROR } = require('./utils/constants');
+const NotFoundError = require('./errors/not-found-error');
 const { createUser } = require('./controllers/users');
 const { validateCreateUser } = require('./middlewares/validation');
 
@@ -26,8 +26,8 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 /** обработка несуществующих роутов */
-app.use((req, res) => {
-  res.status(NOT_FOUND_ERROR).send({ message: 'Страница не найдена' });
+app.use((req, res, next) => {
+  next(new NotFoundError('Страница не найдена'));
 });
 
 /** обработчик ошибок celebrate */

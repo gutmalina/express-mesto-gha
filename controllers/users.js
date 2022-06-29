@@ -45,7 +45,7 @@ module.exports.createUser = (req, res, next) => {
         });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new CastError('Введены некорректные данные пользователя'));
       }
       if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
@@ -65,6 +65,27 @@ module.exports.getUsers = (req, res, next) => {
         .send({ data: users });
     })
     .catch(next);
+};
+
+/** получение информации о пользователе */
+module.exports.getMe = (req, res, next) => {
+  const userId = req.user._id;
+  User
+    .findById(userId)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь по указанному id не найден');
+      }
+      res
+        .status(200)
+        .send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new CastError('Введен некорректный id пользователя'));
+      }
+      next();
+    });
 };
 
 /** получить пользователя по ID */

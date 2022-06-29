@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const {
   getUsers,
+  getMe,
   getUserById,
   updateUser,
   updateAvatar,
@@ -13,6 +14,9 @@ const {
 
 /** получить всех пользователей */
 router.get('/', getUsers);
+
+/** получение информации о пользователе */
+router.get('/me', getMe);
 
 /** получить пользователя по ID */
 router.get('/:userId', validateGetUserById, getUserById);
