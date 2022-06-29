@@ -17,15 +17,26 @@ module.exports.getCards = (req, res, next) => {
 module.exports.createCard = async (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
-  try {
-    const card = await Card.create({ name, link, owner });
-    res.status(201).send({ data: card });
-  } catch (err) {
-    if (err.name === 'ValidationError') {
-      next(new CastError('Введены некорректные данные'));
-    }
-    next();
-  }
+  Card
+    .create({ name, link, owner })
+    .then((card) => {
+      res.status(201).send({ data: card });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new CastError('Введены некорректные данные'));
+      }
+      next();
+    });
+  // try {
+  //   const card = await Card.create({ name, link, owner });
+  //   res.status(201).send({ data: card });
+  // } catch (err) {
+  //   if (err.name === 'ValidationError') {
+  //     next(new CastError('Введены некорректные данные'));
+  //   }
+  //   next();
+  // }
 };
 
 /** удалить карточку по ID */
