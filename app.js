@@ -20,12 +20,6 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/signup', validateCreateUser, createUser);
 app.post('/signin', validateLogin, login);
 
-// /** временный мидлвэр - ID автора карточки */
-// app.use(owner);
-
-// /** защита авторизацией */
-// app.use(auth);
-
 /** роутеры пользователей и карточек */
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
