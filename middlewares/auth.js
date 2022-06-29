@@ -22,19 +22,4 @@ module.exports = (req, res, next) => {
     .catch(() => {
       next(new UnauthorizedError('Необходима авторизация'));
     });
-  // try {
-  //   const payload = checkToken(token);
-  //   return User
-  //     .findOne({ email: payload.email })
-  //     .then((user) => {
-  //       if (!user) {
-  //         next(new UnauthorizedError('Необходима авторизация'));
-  //       }
-  //       req.user = { id: user._id };
-  //       next();
-  //     })
-  //     .catch(next);
-  // } catch (err) {
-  //   next(new UnauthorizedError('Необходима авторизация'));
-  // }
 };
