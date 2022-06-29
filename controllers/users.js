@@ -1,58 +1,64 @@
 const User = require('../models/user');
-const {
-  CAST_ERROR,
-  NOT_FOUND_ERROR,
-  SERVER_ERROR,
-} = require('../utils/constants');
+const CastError = require('../errors/cast-error');
+const NotFoundError = require('../errors/not-found-error');
 
 /** добавить пользователя */
-module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
+module.exports.createUser = (req, res, next) => {
+  const {
+    email,
+    password,
+    name,
+    about,
+    avatar,
+  } = req.body;
+  User
+    .create({
+      email,
+      password,
+      name,
+      about,
+      avatar,
+    })
     .then((user) => {
       res.status(201).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
-        return;
+        next(new CastError('Введены некорректные данные пользователя'));
       }
-      res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+      next();
     });
 };
 
 /** получить всех пользователей */
-module.exports.getUsers = (req, res) => {
-  User.find({})
+module.exports.getUsers = (req, res, next) => {
+  User
+    .find({})
     .then((users) => {
       res.status(200).send({ data: users });
     })
-    .catch(() => {
-      res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-    });
+    .catch(next);
 };
 
 /** получить пользователя по ID */
-module.exports.getUserById = async (req, res) => {
+module.exports.getUserById = async (req, res, next) => {
   const { userId } = req.params;
   try {
     const user = await User.findById(userId);
     if (!user) {
-      res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
-      return;
+      throw new NotFoundError('Пользователь по указанному id не найден');
     }
     res.status(200).send({ data: user });
   } catch (err) {
     if (err.name === 'CastError') {
-      res.status(CAST_ERROR).send({ message: 'Введен некорректный id пользователя' });
-      return;
+      next(new CastError('Введен некорректный id пользователя'));
     }
-    res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+    next();
   }
 };
 
 /** обновить данные пользователя */
-module.exports.updateUser = async (req, res) => {
+module.exports.updateUser = async (req, res, next) => {
   const { name, about } = req.body;
   const userId = req.user._id;
   try {
@@ -69,19 +75,17 @@ module.exports.updateUser = async (req, res) => {
     res.status(200).send({ data: { user } });
   } catch (err) {
     if (err.name === 'NotFoundError') {
-      res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
-      return;
+      next(new NotFoundError('Пользователь по указанному id не найден'));
     }
     if (err.name === 'ValidationError' || err.name === 'CastError') {
-      res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
-      return;
+      next(new CastError('Введены некорректные данные пользователя'));
     }
-    res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+    next();
   }
 };
 
 /** обновить аватар пользователя */
-module.exports.updateAvatar = async (req, res) => {
+module.exports.updateAvatar = async (req, res, next) => {
   const { avatar } = req.body;
   const userId = req.user._id;
   try {
@@ -98,13 +102,11 @@ module.exports.updateAvatar = async (req, res) => {
     res.status(200).send({ data: { user } });
   } catch (err) {
     if (err.name === 'NotFoundError') {
-      res.status(NOT_FOUND_ERROR).send({ message: 'Пользователь по указанному id не найден' });
-      return;
+      next(new NotFoundError('Пользователь по указанному id не найден'));
     }
     if (err.name === 'ValidationError' || err.name === 'CastError') {
-      res.status(CAST_ERROR).send({ message: 'Введены некорректные данные пользователя' });
-      return;
+      next(new CastError('Введены некорректные данные пользователя'));
     }
-    res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+    next();
   }
 };

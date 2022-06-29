@@ -5,7 +5,8 @@ const ForbiddenError = require('../errors/forbidden-error');
 
 /** получить все карточки */
 module.exports.getCards = (req, res, next) => {
-  Card.find({})
+  Card
+    .find({})
     .then((cards) => {
       res.status(200).send({ data: cards });
     })
@@ -31,13 +32,15 @@ module.exports.createCard = async (req, res, next) => {
 module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
   const userId = req.user._id;
-  Card.findById(cardId)
+  Card
+    .findById(cardId)
     .orFail(() => next(new NotFoundError('Карточка с указанным id не найдена')))
     .then((card) => {
       if (String(userId) !== String(card.owner._id)) {
         next(new ForbiddenError('Карточка не может быть удалена'));
       }
-      Card.findByIdAndRemove(cardId)
+      Card
+        .findByIdAndRemove(cardId)
         .then(() => res.status(200).send({ data: card }))
         .catch(next);
     })
@@ -53,7 +56,8 @@ module.exports.deleteCard = (req, res, next) => {
 module.exports.likeCard = (req, res, next) => {
   const { cardId } = req.params;
   const userId = req.user._id;
-  Card.findByIdAndUpdate(cardId, { $addToSet: { likes: userId } }, { new: true })
+  Card
+    .findByIdAndUpdate(cardId, { $addToSet: { likes: userId } }, { new: true })
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточка с указанным id не найдена');
@@ -72,7 +76,8 @@ module.exports.likeCard = (req, res, next) => {
 module.exports.dislikeCard = (req, res, next) => {
   const { cardId } = req.params;
   const userId = req.user._id;
-  Card.findByIdAndUpdate(cardId, { $pull: { likes: userId } }, { new: true })
+  Card
+    .findByIdAndUpdate(cardId, { $pull: { likes: userId } }, { new: true })
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточка с указанным id не найдена');
