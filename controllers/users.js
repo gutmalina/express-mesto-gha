@@ -85,9 +85,10 @@ module.exports.login = (req, res, next) => {
       }
       return generateToken({ email: user.email });
     })
-    .then((token) => {
+    .then(() => {
       res
-        .send({ token });
+        .status(200);
+      next();
     })
     .catch((err) => {
       if (err.statusCode === 'CastError') {
