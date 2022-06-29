@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const express = require('express');
 const { errors } = require('celebrate');
 
-// const owner = require('./middlewares/owner');
 const error = require('./middlewares/error');
 const NotFoundError = require('./errors/not-found-error');
 const { createUser, login } = require('./controllers/users');
@@ -20,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/signup', validateCreateUser, createUser);
 app.post('/signin', validateLogin, login);
 
-/** роутеры пользователей и карточек */
+/** роутеры пользователей и карточек, защищены авторизацией */
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
