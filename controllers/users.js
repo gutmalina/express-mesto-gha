@@ -1,10 +1,12 @@
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const CastError = require('../errors/cast-error');
 const NotFoundError = require('../errors/not-found-error');
 const ForbiddenError = require('../errors/forbidden-error');
+const ConflictError = require('../errors/conflict-error');
 
-// const SALT_ROUNDS = 10;
-// const MONGO_DUPLICATE_ERROR_CODE = 11000;
+const SALT_ROUNDS = 10;
+const MONGO_DUPLICATE_ERROR_CODE = 11000;
 
 /** добавить пользователя */
 module.exports.createUser = (req, res, next) => {
@@ -18,22 +20,36 @@ module.exports.createUser = (req, res, next) => {
   if (!email || !password) {
     next(new ForbiddenError('Не передан email или пароль'));
   }
-  User
-    .create({
-      email,
-      password,
-      name,
-      about,
-      avatar,
+  return bcrypt
+    .hash(password, SALT_ROUNDS)
+    .then((hash) => {
+      User
+        .create({
+          email,
+          password: hash,
+          name,
+          about,
+          avatar,
+        });
     })
     .then((user) => {
       res
         .status(201)
-        .send({ data: user });
+        .send({
+          user: {
+            email: user.email,
+            name: user.name,
+            about: user.about,
+            avatar: user.avatar,
+          },
+        });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new CastError('Введены некорректные данные пользователя'));
+      }
+      if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
+        next(new ConflictError('Пользователь с указанным email уже существует'));
       }
       next();
     });
