@@ -11,6 +11,14 @@ const validateCreateUser = celebrate({
   }),
 });
 
+/** аутентификация - вход по email и паролю  */
+const validateLogin = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().length(5).hex(),
+  }),
+});
+
 /** получить пользователя по ID */
 const validateGetUserById = celebrate({
   params: Joi.object().keys({
@@ -64,6 +72,7 @@ const validateDislikeCard = celebrate({
 
 module.exports = {
   validateCreateUser,
+  validateLogin,
   validateGetUserById,
   validateUpdateUser,
   validateUpdateAvatar,

@@ -1,30 +1,40 @@
 const checkToken = require('../helpers/jwt');
 const User = require('../models/user');
-const { SERVER_ERROR, UNAUTHORIZED_ERROR } = require('../utils/constants');
+const UnauthorizedError = require('../errors/unauthorized-error');
 
 /** авторизация */
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
-    return res.status(UNAUTHORIZED_ERROR).send({ message: 'Необходима авторизация' });
+    next(new UnauthorizedError('Необходима авторизация'));
   }
   const token = authorization.replace('Bearer', '');
-  try {
-    const payload = checkToken(token);
-    return User
-      .findOne({ email: payload.email })
-      // eslint-disable-next-line consistent-return
-      .then((user) => {
-        if (!user) {
-          return res.status(UNAUTHORIZED_ERROR).send({ message: 'Необходима авторизация' });
-        }
-        req.user = { id: user._id };
-        next();
-      })
-      .catch(() => {
-        res.status(SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-      });
-  } catch (err) {
-    return res.status(UNAUTHORIZED_ERROR).send({ message: 'Необходима авторизация' });
-  }
+  const payload = checkToken(token);
+  User
+    .findOne({ email: payload.email })
+    .then((user) => {
+      if (!user) {
+        next(new UnauthorizedError('Необходима авторизация'));
+      }
+      req.user = { id: user._id };
+      next();
+    })
+    .catch(() => {
+      next(new UnauthorizedError('Необходима авторизация'));
+    });
+  // try {
+  //   const payload = checkToken(token);
+  //   return User
+  //     .findOne({ email: payload.email })
+  //     .then((user) => {
+  //       if (!user) {
+  //         next(new UnauthorizedError('Необходима авторизация'));
+  //       }
+  //       req.user = { id: user._id };
+  //       next();
+  //     })
+  //     .catch(next);
+  // } catch (err) {
+  //   next(new UnauthorizedError('Необходима авторизация'));
+  // }
 };

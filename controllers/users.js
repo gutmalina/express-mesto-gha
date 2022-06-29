@@ -4,6 +4,7 @@ const CastError = require('../errors/cast-error');
 const NotFoundError = require('../errors/not-found-error');
 const ForbiddenError = require('../errors/forbidden-error');
 const ConflictError = require('../errors/conflict-error');
+const generateToken = require('../helpers/jwt');
 
 const SALT_ROUNDS = 10;
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
@@ -18,7 +19,7 @@ module.exports.createUser = (req, res, next) => {
     avatar,
   } = req.body;
   if (!email || !password) {
-    next(new ForbiddenError('Не передан email или пароль'));
+    next(new CastError('Не передан email или пароль'));
   }
   return bcrypt
     .hash(password, SALT_ROUNDS)
@@ -50,6 +51,48 @@ module.exports.createUser = (req, res, next) => {
       }
       if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
         next(new ConflictError('Пользователь с указанным email уже существует'));
+      }
+      next();
+    });
+};
+
+/** аутентификация - вход по email и паролю  */
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    next(new CastError('Не передан email или пароль'));
+  }
+  return User
+    .findOne({ email })
+    .then((user) => {
+      if (!user) {
+        const err = new Error('Некорректная почта или пароль');
+        err.statusCode = 'ForbiddenError';
+        throw err;
+      }
+      return Promise.all([
+        user,
+        bcrypt.compare(password, user.password),
+      ]);
+    })
+    .then(([user, isPasswordCorrect]) => {
+      if (!isPasswordCorrect) {
+        const err = new Error('Некорректная почта или пароль');
+        err.statusCode = 'ForbiddenError';
+        throw err;
+      }
+      return generateToken({ email: user.email });
+    })
+    .then((token) => {
+      res
+        .send({ token });
+    })
+    .catch((err) => {
+      if (err.statusCode === 'CastError') {
+        next(new CastError('Введены некорректные данные пользователя'));
+      }
+      if (err.statusCode === 'ForbiddenError') {
+        next(new ForbiddenError({ message: err.message }));
       }
       next();
     });
