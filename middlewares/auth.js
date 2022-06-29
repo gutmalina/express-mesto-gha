@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = require('../helpers/jwt');
-// const User = require('../models/user');
+const User = require('../models/user');
 const UnauthorizedError = require('../errors/unauthorized-error');
 
 /** авторизация */
@@ -18,18 +18,18 @@ module.exports = (req, res, next) => {
   }
   req.user = payload;
   next();
-  // User
-  //   .findOne({ email: payload.email })
-  //   .then((user) => {
-  //     if (!user) {
-  //       next(new UnauthorizedError('Необходима авторизация'));
-  //     }
-  //     req.user = { id: user._id };
-  //     res
-  //       .status(200);
-  //     next();
-  //   })
-  //   .catch(() => {
-  //     next(new UnauthorizedError('Необходима авторизация'));
-  //   });
+  User
+    .findOne({ email: payload.email })
+    .then((user) => {
+      if (!user) {
+        next(new UnauthorizedError('Необходима авторизация'));
+      }
+      req.user = { id: user._id };
+      res
+        .status(200);
+      next();
+    })
+    .catch(() => {
+      next(new UnauthorizedError('Необходима авторизация'));
+    });
 };
