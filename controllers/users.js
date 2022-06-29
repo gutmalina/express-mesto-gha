@@ -1,6 +1,10 @@
 const User = require('../models/user');
 const CastError = require('../errors/cast-error');
 const NotFoundError = require('../errors/not-found-error');
+const ForbiddenError = require('../errors/forbidden-error');
+
+// const SALT_ROUNDS = 10;
+// const MONGO_DUPLICATE_ERROR_CODE = 11000;
 
 /** добавить пользователя */
 module.exports.createUser = (req, res, next) => {
@@ -11,6 +15,9 @@ module.exports.createUser = (req, res, next) => {
     about,
     avatar,
   } = req.body;
+  if (!email || !password) {
+    next(new ForbiddenError('Не передан email или пароль'));
+  }
   User
     .create({
       email,
