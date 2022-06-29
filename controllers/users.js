@@ -4,6 +4,7 @@ const CastError = require('../errors/cast-error');
 const NotFoundError = require('../errors/not-found-error');
 const ForbiddenError = require('../errors/forbidden-error');
 const ConflictError = require('../errors/conflict-error');
+const UnauthorizedError = require('../errors/unauthorized-error');
 const { generateToken } = require('../helpers/jwt');
 
 const SALT_ROUNDS = 10;
@@ -60,7 +61,7 @@ module.exports.createUser = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    next(new CastError('Не передан email или пароль'));
+    next(new UnauthorizedError('Не передан email или пароль'));
   }
   return User
     .findOne({ email })
