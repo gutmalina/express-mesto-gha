@@ -4,7 +4,7 @@ const CastError = require('../errors/cast-error');
 const NotFoundError = require('../errors/not-found-error');
 const ForbiddenError = require('../errors/forbidden-error');
 const ConflictError = require('../errors/conflict-error');
-const generateToken = require('../helpers/jwt');
+const { generateToken } = require('../helpers/jwt');
 
 const SALT_ROUNDS = 10;
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
@@ -64,6 +64,7 @@ module.exports.login = (req, res, next) => {
   }
   return User
     .findOne({ email })
+    .select('+password')
     .then((user) => {
       if (!user) {
         const err = new Error('Некорректная почта или пароль');
