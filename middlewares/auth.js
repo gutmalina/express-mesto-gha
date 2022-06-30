@@ -18,6 +18,7 @@ module.exports = (req, res, next) => {
   }
   req.user = payload;
   next();
+  console.log(req.user);
   User
     .findOne({ email: payload.email })
     .then((user) => {
