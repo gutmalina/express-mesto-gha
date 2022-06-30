@@ -171,7 +171,7 @@ module.exports.updateUser = (req, res, next) => {
     .then((user) => {
       res
         .status(200)
-        .send({ data: { user } });
+        .send({ user });
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
@@ -202,7 +202,7 @@ module.exports.updateAvatar = (req, res, next) => {
     .then((user) => {
       res
         .status(200)
-        .send({ data: { user } });
+        .send({ user });
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
