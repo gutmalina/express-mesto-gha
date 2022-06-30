@@ -2,7 +2,6 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const CastError = require('../errors/cast-error');
 const NotFoundError = require('../errors/not-found-error');
-const ForbiddenError = require('../errors/forbidden-error');
 const ConflictError = require('../errors/conflict-error');
 const UnauthorizedError = require('../errors/unauthorized-error');
 const { generateToken } = require('../helpers/jwt');
@@ -68,8 +67,8 @@ module.exports.login = (req, res, next) => {
     .select('+password')
     .then((user) => {
       if (!user) {
-        const err = new ForbiddenError('Некорректная почта или пароль');
-        err.statusCode = 'ForbiddenError';
+        const err = new UnauthorizedError('Некорректная почта или пароль');
+        err.statusCode = 'UnauthorizedError';
         throw err;
       }
       return Promise.all([
@@ -79,8 +78,8 @@ module.exports.login = (req, res, next) => {
     })
     .then(([user, isPasswordCorrect]) => {
       if (!isPasswordCorrect) {
-        const err = new ForbiddenError('Некорректная почта или пароль');
-        err.statusCode = 'ForbiddenError';
+        const err = new UnauthorizedError('Некорректная почта или пароль');
+        err.statusCode = 'UnauthorizedError';
         throw err;
       }
       return generateToken({ email: user.email });
@@ -90,17 +89,14 @@ module.exports.login = (req, res, next) => {
         .status(200).send({ token });
     })
     .catch((err) => {
-      // console.log(err)
       if (err.statusCode === 'CastError') {
         next(new CastError('Введены некорректные данные пользователя'));
       }
-      if (err.statusCode === 'ForbiddenError') {
-        next(new ForbiddenError('Некорректная почта или пароль'));
+      if (err.statusCode === 'UnauthorizedError') {
+        next(new UnauthorizedError('Некорректная почта или пароль'));
       }
       next(err);
     });
-  // .catch((err) => next(err));
-  // .catch(next);
 };
 
 /** получить всех пользователей */
