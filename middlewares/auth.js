@@ -26,7 +26,10 @@ module.exports = (req, res, next) => {
       }
       req.user = { id: user._id };
       res
-        .status(200).send('Успешная авторизация');
+        .status(200).send();
+      next();
     })
-    .catch((Error) => next(Error));
+    .catch(() => {
+      next(new UnauthorizedError('Необходима авторизация'));
+    });
 };
