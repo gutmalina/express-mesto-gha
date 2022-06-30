@@ -85,20 +85,20 @@ module.exports.login = (req, res, next) => {
       }
       return generateToken({ email: user.email });
     })
-    .then(() => {
+    .then((token) => {
       res
-        .status(200);
-      next();
+        .status(200).send({ token });
     })
-    .catch((err) => {
-      if (err.statusCode === 'CastError') {
-        next(new CastError('Введены некорректные данные пользователя'));
-      }
-      if (err.statusCode === 'ForbiddenError') {
-        next(new ForbiddenError({ message: err.message }));
-      }
-      next(err);
-    });
+    // .catch((err) => {
+    //   if (err.statusCode === 'CastError') {
+    //     next(new CastError('Введены некорректные данные пользователя'));
+    //   }
+    //   if (err.statusCode === 'ForbiddenError') {
+    //     next(new ForbiddenError({ message: err.message }));
+    //   }
+    //   next(err);
+    // });
+    .catch((Error) => next(Error));
 };
 
 /** получить всех пользователей */
