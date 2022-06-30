@@ -64,7 +64,7 @@ module.exports.login = (req, res, next) => {
     next(new UnauthorizedError('Не передан email или пароль'));
   }
   return User
-    .findOne({ email })
+    .findOne({ email, password })
     .select('+password')
     .then((user) => {
       if (!user) {
