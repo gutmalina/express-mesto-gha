@@ -113,7 +113,7 @@ module.exports.getUsers = (req, res, next) => {
 
 /** получение информации о пользователе */
 module.exports.getMe = (req, res, next) => {
-  const userId = req.user._id;
+  const userId = req.user.id;
   User
     .findById(userId)
     .then((user) => {
@@ -156,7 +156,7 @@ module.exports.getUserById = (req, res, next) => {
 /** обновить данные пользователя */
 module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
-  const userId = req.user._id;
+  const userId = req.user.id;
   User
     .findByIdAndUpdate(
       userId,
@@ -187,7 +187,7 @@ module.exports.updateUser = (req, res, next) => {
 /** обновить аватар пользователя */
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  const userId = req.user._id;
+  const userId = req.user.id;
   User
     .findByIdAndUpdate(
       userId,
