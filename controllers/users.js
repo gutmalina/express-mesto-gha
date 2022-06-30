@@ -89,16 +89,16 @@ module.exports.login = (req, res, next) => {
       res
         .status(200).send({ token });
     })
-    .catch((err) => {
-      if (err.statusCode === 'CastError') {
-        next(new CastError('Введены некорректные данные пользователя'));
-      }
-      if (err.statusCode === 'ForbiddenError') {
-        next(new ForbiddenError({ message: err.message }));
-      }
-      next(err);
-    });
-  // .catch((Error) => next(Error));
+    // .catch((err) => {
+    //   if (err.statusCode === 'CastError') {
+    //     next(new CastError('Введены некорректные данные пользователя'));
+    //   }
+    //   if (err.statusCode === 'ForbiddenError') {
+    //     next(new ForbiddenError({ message: err.message }));
+    //   }
+    //   next(err);
+    // });
+    .catch((err) => next(err));
 };
 
 /** получить всех пользователей */

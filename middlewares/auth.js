@@ -26,7 +26,7 @@ module.exports = (req, res, next) => {
       }
       req.user = { id: user._id };
       res
-        .status(200).send();
+        .status(200);
       next();
     })
     .catch(() => {

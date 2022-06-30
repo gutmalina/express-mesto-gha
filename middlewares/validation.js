@@ -1,5 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-// const URL_REGEX = require('../utils/constants');
+const URL_REGEX = require('../utils/constants');
 
 /** добавить пользователя */
 const validateCreateUser = celebrate({
@@ -39,8 +39,7 @@ const validateUpdateUser = celebrate({
 /** обновить аватар пользователя */
 const validateUpdateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string(),
-    // .regex(RegExp(URL_REGEX)),
+    avatar: Joi.string().regex(RegExp(URL_REGEX)),
   }),
 });
 
@@ -48,8 +47,7 @@ const validateUpdateAvatar = celebrate({
 const validateCreateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string(),
-    // .regex(RegExp(URL_REGEX)),
+    link: Joi.string().regex(RegExp(URL_REGEX)),
   }),
 });
 
