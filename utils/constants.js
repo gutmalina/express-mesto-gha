@@ -1,3 +1,3 @@
-const URL_REGEX = /^https?:\/\/\w\S{1,}#?$/i;
+const URL_REGEX = /^https?:\/\/[-a-zA-Z\d]+\.[\w\-._~:/?#[\]@!$&'()*+,;=]{1,}#?$/i;
 
 module.exports = URL_REGEX;

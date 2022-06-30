@@ -111,9 +111,9 @@ module.exports.getUsers = (req, res, next) => {
     .catch(next);
 };
 
-/** получение информации о пользователе */
+/** получить информацию о пользователе */
 module.exports.getMe = (req, res, next) => {
-  const userId = req.user.id;
+  const userId = req.user._id;
   User
     .findById(userId)
     .then((user) => {
@@ -156,7 +156,7 @@ module.exports.getUserById = (req, res, next) => {
 /** обновить данные пользователя */
 module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
-  const userId = req.user.id;
+  const userId = req.user._id;
   User
     .findByIdAndUpdate(
       userId,
@@ -187,7 +187,7 @@ module.exports.updateUser = (req, res, next) => {
 /** обновить аватар пользователя */
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  const userId = req.user.id;
+  const userId = req.user._id;
   User
     .findByIdAndUpdate(
       userId,

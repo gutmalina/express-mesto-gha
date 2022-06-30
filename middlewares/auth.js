@@ -17,21 +17,16 @@ module.exports = (req, res, next) => {
     next(new UnauthorizedError('Необходима авторизация'));
   }
   req.user = payload;
-  // next();
   User
     .findOne({ email: payload.email })
     .then((user) => {
       if (!user) {
-        // next(new UnauthorizedError('Необходима авторизация'));
         throw new UnauthorizedError('Необходима авторизация');
       }
-      req.user = { id: user._id };
+      req.user = { _id: user._id };
       res
         .status(200);
       next();
     })
-    // .catch(() => {
-    //   next(new UnauthorizedError('Необходима авторизация'));
-    // });
     .catch(next);
 };
