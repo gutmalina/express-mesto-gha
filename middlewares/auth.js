@@ -19,17 +19,19 @@ module.exports = (req, res, next) => {
   req.user = payload;
   // next();
   User
-    .findOne({ email: req.user.email })
+    .findOne({ email: payload.email })
     .then((user) => {
       if (!user) {
-        next(new UnauthorizedError('Необходима авторизация'));
+        // next(new UnauthorizedError('Необходима авторизация'));
+        throw new UnauthorizedError('Необходима авторизация');
       }
       req.user = { id: user._id };
       res
-        .status(200).send({ message: 'Авторизован' });
+        .status(200);
       next();
     })
-    .catch(() => {
-      next(new UnauthorizedError('Необходима авторизация'));
-    });
+    // .catch(() => {
+    //   next(new UnauthorizedError('Необходима авторизация'));
+    // });
+    .catch(next);
 };
