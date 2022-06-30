@@ -68,7 +68,7 @@ module.exports.login = (req, res, next) => {
     .select('+password')
     .then((user) => {
       if (!user) {
-        const err = new Error('Некорректная почта или пароль');
+        const err = new ForbiddenError('Некорректная почта или пароль');
         err.statusCode = 'ForbiddenError';
         throw err;
       }
@@ -79,7 +79,7 @@ module.exports.login = (req, res, next) => {
     })
     .then(([user, isPasswordCorrect]) => {
       if (!isPasswordCorrect) {
-        const err = new Error('Некорректная почта или пароль');
+        const err = new ForbiddenError('Некорректная почта или пароль');
         err.statusCode = 'ForbiddenError';
         throw err;
       }
