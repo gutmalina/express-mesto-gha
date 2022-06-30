@@ -98,7 +98,8 @@ module.exports.login = (req, res, next) => {
     //   }
     //   next(err);
     // });
-    .catch((err) => next(err));
+    // .catch((err) => next(err));
+    .catch(next);
 };
 
 /** получить всех пользователей */
