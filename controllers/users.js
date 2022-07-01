@@ -21,40 +21,46 @@ module.exports.createUser = (req, res, next) => {
   if (!email || !password) {
     next(new CastError('Не передан email или пароль'));
   }
-  return bcrypt
-    .hash(password, SALT_ROUNDS)
-    .then((hash) => (
-      User
-        .create({
-          email,
-          password: hash,
-          name,
-          about,
-          avatar,
-        })
-    ))
-    .then((user) => {
-      res
-        .status(201)
-        .send({
-          user: {
-            email: user.email,
-            name: user.name,
-            about: user.about,
-            avatar: user.avatar,
-          },
-        });
+  User
+    .findOne(email)
+    .orFail(() => {
+      throw new ConflictError('Пользователь с указанным email уже существует');
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new CastError('Введены некорректные данные пользователя'));
-      }
-      if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-        next(new ConflictError('Пользователь с указанным email уже существует'));
-      } else {
-        next(err);
-      }
-    });
+    .then(() => bcrypt
+      .hash(password, SALT_ROUNDS)
+      .then((hash) => (
+        User
+          .create({
+            email,
+            password: hash,
+            name,
+            about,
+            avatar,
+          })
+      ))
+      .then((user) => {
+        res
+          .status(201)
+          .send({
+            user: {
+              email: user.email,
+              name: user.name,
+              about: user.about,
+              avatar: user.avatar,
+            },
+          });
+      })
+      .catch((err) => {
+        if (err.name === 'ValidationError' || err.name === 'CastError') {
+          next(new CastError('Введены некорректные данные пользователя'));
+        }
+        if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
+          next(new ConflictError('Пользователь с указанным email уже существует'));
+        } else {
+          next(err);
+        }
+      }))
+    .catch(next);
 };
 
 /** аутентификация - вход по email и паролю  */
