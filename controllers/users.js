@@ -18,9 +18,9 @@ module.exports.createUser = (req, res, next) => {
     about,
     avatar,
   } = req.body;
-  if (!email || !password) {
-    next(new CastError('Не передан email или пароль'));
-  }
+  // if (!email || !password) {
+  //   next(new CastError('Не передан email или пароль'));
+  // }
   return bcrypt
     .hash(password, SALT_ROUNDS)
     .then((hash) => (
@@ -48,8 +48,7 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new CastError('Введены некорректные данные пользователя'));
-      }
-      if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
+      } else if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
         next(new ConflictError('Пользователь с указанным email уже существует'));
       } else {
         next(err);
@@ -92,8 +91,7 @@ module.exports.login = (req, res, next) => {
     .catch((err) => {
       if (err.statusCode === 'CastError') {
         next(new CastError('Введены некорректные данные пользователя'));
-      }
-      if (err.statusCode === 'UnauthorizedError') {
+      } else if (err.statusCode === 'UnauthorizedError') {
         next(new UnauthorizedError('Некорректная почта или пароль'));
       } else {
         next(err);
@@ -180,8 +178,7 @@ module.exports.updateUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError('Пользователь по указанному id не найден'));
-      }
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      } else if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new CastError('Введены некорректные данные пользователя'));
       } else {
         next(err);
@@ -212,8 +209,7 @@ module.exports.updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError('Пользователь по указанному id не найден'));
-      }
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      } else if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new CastError('Введены некорректные данные пользователя'));
       } else {
         next(err);
