@@ -51,8 +51,9 @@ module.exports.createUser = (req, res, next) => {
       }
       if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
         next(new ConflictError('Пользователь с указанным email уже существует'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -94,8 +95,9 @@ module.exports.login = (req, res, next) => {
       }
       if (err.statusCode === 'UnauthorizedError') {
         next(new UnauthorizedError('Некорректная почта или пароль'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -127,8 +129,9 @@ module.exports.getMe = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new CastError('Введен некорректный id пользователя'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -148,8 +151,9 @@ module.exports.getUserById = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new CastError('Введен некорректный id пользователя'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -179,8 +183,9 @@ module.exports.updateUser = (req, res, next) => {
       }
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new CastError('Введены некорректные данные пользователя'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -210,7 +215,8 @@ module.exports.updateAvatar = (req, res, next) => {
       }
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new CastError('Введены некорректные данные пользователя'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };

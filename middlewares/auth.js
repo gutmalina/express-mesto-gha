@@ -4,10 +4,11 @@ const User = require('../models/user');
 const UnauthorizedError = require('../errors/unauthorized-error');
 
 /** авторизация */
+// eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    next(new UnauthorizedError('Необходима авторизация'));
+    return next(new UnauthorizedError('Необходима авторизация'));
   }
   const token = authorization.replace('Bearer ', '');
   let payload;
