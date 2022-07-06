@@ -1,0 +1,8 @@
+.card__caption {
+  max-width: 100%;
+  margin: 0 20px 20px 21px;
+  display: grid;
+  grid-template-columns: repeat(1, auto) 22px;
+  grid-template-rows: 30px;
+  gap: 0 20px;
+}

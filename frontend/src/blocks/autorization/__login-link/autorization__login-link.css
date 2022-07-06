@@ -1,0 +1,9 @@
+.autorization__login-link{
+  color: #FFFFFF;
+  text-decoration-line: none;
+}
+
+.autorization__login-link:hover{
+  opacity: 0.6;
+  cursor: pointer;
+}

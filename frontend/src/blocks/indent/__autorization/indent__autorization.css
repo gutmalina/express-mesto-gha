@@ -1,0 +1,9 @@
+.indent__autorization {
+  margin: 20px auto 80px;
+}
+
+@media screen and (max-width: 418px) {
+  .indent__autorization{
+    margin-top: 0;
+  }
+}

@@ -1,0 +1,22 @@
+.button_style_save {
+  border-radius: 2px;
+  border: none;
+  font-family: 'Inter', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 122%;
+  text-align: center;
+  min-height: 50px;
+  min-width: 100%;
+}
+.button_style_save:hover {
+  opacity: 0.8;
+}
+@media screen and (max-width: 424px) {
+  .button_style_save {
+    margin-top: 45px;
+    font-size: 14px;
+    line-height: 120%;
+    min-height: 46px;
+  }
+}

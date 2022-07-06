@@ -1,0 +1,16 @@
+.button_style_close-active{
+  background-image: url(../../../images/CloseIcon.svg);
+  min-width: 20px;
+  min-height: 20px;
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+  background-repeat: round;
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+ }
+
+.button_style_close-active:hover {
+opacity: 0.6;
+}
+

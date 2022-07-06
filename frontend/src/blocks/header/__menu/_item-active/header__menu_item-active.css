@@ -1,0 +1,9 @@
+.header__menu_item-active{
+  margin-bottom: 18px;
+  text-align: center;
+}
+.header__menu_item-active:last-of-type{
+  margin-bottom: 82px;
+  border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+  padding-bottom: 40px;
+}

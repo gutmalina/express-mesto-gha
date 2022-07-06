@@ -1,0 +1,19 @@
+.header__menu_link{
+  font-family: 'Inter', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 122%;
+  color: #A9A9A9;;
+  text-decoration-line: none;
+  margin-left: 24px;
+}
+.header__menu_link:hover{
+  opacity: 0.6;
+  cursor: pointer;
+}
+@media screen and (max-width: 418px) {
+  .header__menu_link{
+    font-size: 14px;
+    margin-right: 32px;
+  }
+}

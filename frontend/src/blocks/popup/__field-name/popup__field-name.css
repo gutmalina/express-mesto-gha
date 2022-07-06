@@ -1,0 +1,6 @@
+.popup__field-name {
+  margin-bottom: 30px;
+}
+.popup__fiel-name:last-of-type {
+  margin-bottom: 0;
+}

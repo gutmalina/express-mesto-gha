@@ -1,0 +1,20 @@
+.button_style_close {
+  background-image: url(../../../images/CloseIcon.svg);
+  min-width: 32px;
+  min-height: 32px;
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+  grid-column: 2;
+}
+.button_style_close:hover {
+  opacity: 0.6;
+}
+@media screen and (max-width: 424px) {
+  .button_style_close {
+    grid-column: 1;
+    min-width: 20px;
+    min-height: 20px;
+    justify-self: end;
+    background-size: contain;
+  }
+}

@@ -1,0 +1,12 @@
+.group-cards {
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(282px, 1fr));
+  grid-template-rows: auto 361px;
+  gap: 20px 17px;
+}
+@media screen and (max-width: 767px) {
+  .group-cards {
+    gap: 21px 15px;
+  }
+}

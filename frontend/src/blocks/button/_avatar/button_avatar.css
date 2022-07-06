@@ -1,0 +1,10 @@
+.button_avatar{
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 0;
+  border: 0;
+  padding: 0;
+  background-image: url(../../../images/Edit-avatar.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 26px;
+}

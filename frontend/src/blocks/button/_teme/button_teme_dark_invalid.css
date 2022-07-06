@@ -1,0 +1,8 @@
+.button_teme_dark_invalid {
+  opacity: 0.2;
+  border: 1px solid #000000;
+  box-sizing: border-box;
+  border-radius: 2px;
+  color: #000000;
+  background: #E5E5E5;
+}

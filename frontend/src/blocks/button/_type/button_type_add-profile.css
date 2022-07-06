@@ -1,0 +1,31 @@
+.button_type_add-profile {
+  background-image: url(../../../images/Vector-add.svg);
+  background-size: 22px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #000000;
+  min-width: 150px;
+  min-height: 50px;
+  border: 2px solid #FFFFFF;
+  border-radius: 2px;
+  align-self: center;
+}
+.button_type_add-profile:hover {
+  opacity: 0.6;
+}
+@media screen and (max-width: 1024px) {
+  .button_type_add-profile {
+    min-width: 110px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .button_type_add-profile {
+    background-size: 19px;
+    min-width: 100%;
+  }
+}
+@media screen and (max-width: 424px) {
+  .button_type_add-profile {
+    background-size: 16px;
+  }
+}

@@ -1,0 +1,9 @@
+.autorization{
+  min-width: 358px;
+}
+
+@media screen and (max-width: 418px) {
+  .autorization{
+    min-width: 260px;
+  }
+}

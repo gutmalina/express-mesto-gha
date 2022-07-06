@@ -1,0 +1,10 @@
+.button_type_like-card {
+  background-size: 22px 19px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #ffffff;
+  border: none;
+}
+.button_type_like-card:hover {
+  opacity: 0.5;
+}

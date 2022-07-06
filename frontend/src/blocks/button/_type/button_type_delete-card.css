@@ -1,0 +1,16 @@
+.button_type_delete-card {
+  background-image: url(../../../images/Trash-top.svg), url(../../../images/Trash-botton.svg);
+  background-size: 18px 4.42px, 15.44px 13.3px;
+  background-position: top, bottom;
+  background-repeat: no-repeat;
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+  min-width: 18px;
+  min-height: 19px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+.button_type_delete-card:hover {
+  opacity: 0.5;
+}

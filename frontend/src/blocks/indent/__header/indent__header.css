@@ -1,0 +1,19 @@
+.indent__header {
+  margin: 0 200px 40px;
+}
+@media screen and (max-width: 1279px) {
+  .indent__header {
+    margin-left: 15.5%;
+    margin-right: 15.5%;
+  }
+}
+@media screen and (max-width: 767px) {
+  .indent__header {
+    margin: 0 10% 41px;
+  }
+}
+@media screen and (max-width: 424px) {
+  .indent__header {
+    margin: 0 0 42px;
+  }
+}

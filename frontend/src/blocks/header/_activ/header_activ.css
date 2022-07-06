@@ -1,0 +1,5 @@
+.header_activ{
+  flex-direction: column-reverse;
+  align-items: center;
+  position: relative;
+}

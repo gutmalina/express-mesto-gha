@@ -1,0 +1,11 @@
+.autorization__contact{
+  margin: 0 0 189px;
+  padding: 0;
+  border: none;
+  min-width: 100%;
+}
+@media screen and (max-width: 418px) {
+  .autorization__contact{
+    margin-bottom: 99px;
+  }
+}

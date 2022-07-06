@@ -1,0 +1,8 @@
+.autorization__signin{
+  margin-top: 15px;
+}
+@media screen and (max-width: 418px) {
+  .autorization__signin{
+    margin-top: 21px;
+  }
+}

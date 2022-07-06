@@ -1,0 +1,7 @@
+.popup__image-fail{
+  background-image: url(../../../images/Fail.svg);
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 32px;
+}
